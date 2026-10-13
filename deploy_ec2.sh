@@ -2,7 +2,7 @@
 set -e
 
 echo "=========================================================="
-echo "🚀 Deploying AI Psychiatric Engine to AWS EC2"
+echo "🚀 Deploying AI Backend Engine to AWS EC2"
 echo "=========================================================="
 
 # 1. Install Docker & Docker Compose if missing
@@ -31,16 +31,20 @@ if [ ! -f "backend/.env" ]; then
     exit 1
 fi
 
-# 3. Build & start containers
-echo "Building and launching containers via Docker Compose..."
+# 3. Build & start containers (Backend + MongoDB)
+echo "Building and launching backend services via Docker Compose..."
 sudo docker compose down --remove-orphans || true
 sudo docker compose up -d --build
 
 echo ""
 echo "=========================================================="
-echo "✅ Deployment Complete!"
-echo "Containers running:"
+echo "✅ EC2 Backend Deployment Complete!"
+echo "Services running:"
 sudo docker compose ps
 echo ""
-echo "🌐 Access your app at: http://$(curl -s ifconfig.me)"
+EC2_IP=$(curl -s ifconfig.me || echo "<YOUR-EC2-PUBLIC-IP>")
+echo "🌐 API Base URL: http://${EC2_IP}:8000"
+echo "🩺 API Docs URL: http://${EC2_IP}:8000/docs"
+echo "👉 Add this to your Vercel project environment variables:"
+echo "   VITE_API_BASE=http://${EC2_IP}:8000"
 echo "=========================================================="
