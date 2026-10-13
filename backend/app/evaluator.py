@@ -56,12 +56,30 @@ async def evaluate_turn(
             response_format={"type": "json_object"},
             temperature=0.2,
         )
-        raw_content = response.choices[0].message.content.strip()
-        # Clean any accidental markdown codeblock backticks
-        if raw_content.startswith("```"):
-            raw_content = raw_content.split("```")[1]
-            if raw_content.startswith("json"):
-                raw_content = raw_content[4:].strip()
+        raw_content = response.choices[0].message.content or ""
+        # Strip any <think> reasoning tags
+        if "<think>" in raw_content and "</think>" in raw_content:
+            raw_content = raw_content.split("</think>")[-1]
+
+        raw_content = raw_content.strip()
+
+        # Extract JSON if wrapped in markdown code blocks
+        if "```" in raw_content:
+            parts = raw_content.split("```")
+            for p in parts:
+                p_clean = p.strip()
+                if p_clean.startswith("json"):
+                    p_clean = p_clean[4:].strip()
+                if p_clean.startswith("{") and p_clean.endswith("}"):
+                    raw_content = p_clean
+                    break
+
+        # Locate the exact outermost JSON object { ... }
+        if "{" in raw_content and "}" in raw_content:
+            start_idx = raw_content.find("{")
+            end_idx = raw_content.rfind("}") + 1
+            raw_content = raw_content[start_idx:end_idx]
+
         telemetry = PassBTelemetry.model_validate_json(raw_content)
         return telemetry
     except Exception as e:
