@@ -2,7 +2,7 @@ import os
 import json
 import logging
 from typing import List, Dict, Any, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 from openai import AsyncOpenAI
 from dotenv import load_dotenv
 
@@ -103,7 +103,7 @@ Please generate the comprehensive Psychiatric Clinical Dossier and Mental Status
 
         dossier = DoctorDossier.model_validate_json(raw_content)
         dossier.session_id = session_id
-        dossier.created_at = datetime.utcnow().isoformat()
+        dossier.created_at = datetime.now(timezone.utc).isoformat()
         return dossier
     except Exception as e:
         logger.error(f"Error in Pass C Synthesizer: {e}. Generating clinical fallback dossier from telemetry.", exc_info=True)
@@ -117,7 +117,7 @@ Please generate the comprehensive Psychiatric Clinical Dossier and Mental Status
 
         return DoctorDossier(
             session_id=session_id,
-            created_at=datetime.utcnow().isoformat(),
+            created_at=datetime.now(timezone.utc).isoformat(),
             executive_summary=ExecutiveSummary(
                 patient_name=patient_name or "Raj",
                 session_duration_minutes=round(len(conversation_history) * 0.7, 1),

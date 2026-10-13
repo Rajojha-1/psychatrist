@@ -1,5 +1,6 @@
 import os
 import logging
+import random
 from typing import List, Dict, Any, Optional
 from openai import AsyncOpenAI
 from dotenv import load_dotenv
@@ -16,6 +17,19 @@ client = AsyncOpenAI(
     api_key=os.getenv("OPENAI_API_KEY"),
     base_url=OPENAI_BASE_URL
 )
+
+_FALLBACK_REPLIES = [
+    "Hmm, lost my train of thought for a sec. What were you saying?",
+    "Sorry, spaced out there for a moment. Go on though.",
+    "My bad, got distracted. Waiting rooms do that to you. Anyway, you were saying?",
+    "Huh, zoned out for a sec. What's been going on with you?",
+]
+
+_ERROR_REPLIES = [
+    "Hmm, got a bit distracted there. What were you saying?",
+    "Sorry, lost my train of thought. Go on.",
+    "Ugh, spacing out. These waiting rooms, man. What were you telling me?",
+]
 
 async def generate_companion_reply(
     conversation_history: List[Dict[str, str]],
@@ -54,8 +68,8 @@ Do NOT get stuck in a loop on the old topic. Seamlessly execute this exact shift
             raw_msg = raw_msg.split("</think>")[-1]
         reply = raw_msg.strip()
         if not reply:
-            reply = "Yeah, mindless scrolling is pretty much the default when you're wiped out. Did you get any decent sleep last night though?"
+            reply = random.choice(_FALLBACK_REPLIES)
         return reply
     except Exception as e:
         logger.error(f"Error in Pass A Companion: {e}", exc_info=True)
-        return "Fair enough. Waiting around can be pretty dull honestly. Did you have a long drive getting here?"
+        return random.choice(_ERROR_REPLIES)

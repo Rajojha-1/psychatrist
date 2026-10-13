@@ -487,10 +487,52 @@
   border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
-.badge-risk.red {
+.badge-risk.red,
+.badge-risk.red_critical {
   background: rgba(239, 68, 68, 0.2);
   color: #f87171;
   border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.hud-toggle-text {
+  font-weight: 500;
+  user-select: none;
+}
+
+.error-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+  padding: 8px 14px;
+  border-radius: 8px;
+  margin: 10px 20px 0;
+  font-size: 0.84rem;
+}
+
+.error-banner.warning {
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #fcd34d;
+}
+
+.retry-btn {
+  background: rgba(239, 68, 68, 0.25);
+  color: #ffffff;
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.retry-btn:hover {
+  background: rgba(239, 68, 68, 0.4);
 }
 
 .directive-box {

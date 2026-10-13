@@ -21,6 +21,14 @@ import './App.css';
 // In production on Vercel, requests use relative path '' which vercel.json proxies over HTTPS to EC2
 const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:8000' : '';
 
+const getRiskBadgeClass = (level) => {
+  if (!level) return 'green';
+  const l = String(level).toUpperCase();
+  if (l.includes('RED') || l.includes('CRITICAL')) return 'red';
+  if (l.includes('AMBER') || l.includes('YELLOW') || l.includes('MODERATE')) return 'amber';
+  return 'green';
+};
+
 export default function App() {
   const [sessionId, setSessionId] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -32,6 +40,7 @@ export default function App() {
   const [dossierModalOpen, setDossierModalOpen] = useState(false);
   const [dossierData, setDossierData] = useState(null);
   const [loadingDossier, setLoadingDossier] = useState(false);
+  const [errorBanner, setErrorBanner] = useState(null);
 
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
@@ -49,11 +58,13 @@ export default function App() {
   const startNewSession = async () => {
     try {
       setLoading(true);
+      setErrorBanner(null);
       const res = await fetch(`${API_BASE}/api/session/start`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ doctor_id: 'dr_default' })
       });
+      if (!res.ok) throw new Error('Failed to initialize session');
       const data = await res.json();
       setSessionId(data.session_id);
       setMessages([
@@ -63,9 +74,11 @@ export default function App() {
       setDossierData(null);
     } catch (err) {
       console.error('Failed to start session:', err);
-      setMessages([
-        { role: 'assistant', content: "Hey, take a seat and settle in. Waiting rooms are always pretty dull—what can I call you by the way?" }
-      ]);
+      setErrorBanner({
+        type: 'error',
+        message: 'Could not connect to session server. Please check your network and click Retry.',
+        canRetry: true
+      });
     } finally {
       setLoading(false);
     }
@@ -75,10 +88,19 @@ export default function App() {
     if (e) e.preventDefault();
     const text = inputValue.trim();
     if (!text || loading) return;
+    if (!sessionId) {
+      setErrorBanner({
+        type: 'error',
+        message: 'No active session. Please click Retry to connect.',
+        canRetry: true
+      });
+      return;
+    }
 
     const newMsgs = [...messages, { role: 'user', content: text }];
     setMessages(newMsgs);
     setInputValue('');
+    setErrorBanner(null);
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
     }
@@ -89,7 +111,7 @@ export default function App() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          session_id: sessionId || 'DEFAULT',
+          session_id: sessionId,
           message: text
         })
       });
@@ -103,6 +125,11 @@ export default function App() {
       }
     } catch (err) {
       console.error('Chat error:', err);
+      setErrorBanner({
+        type: 'warning',
+        message: 'Network issue communicating with companion server.',
+        canRetry: false
+      });
       setMessages([
         ...newMsgs,
         { role: 'assistant', content: "Fair enough. Waiting around can be pretty dull honestly. Did you have a long drive getting here?" }
@@ -255,22 +282,36 @@ export default function App() {
           </div>
         </div>
 
+        {/* Error Banner */}
+        {errorBanner && (
+          <div className={`error-banner ${errorBanner.type === 'warning' ? 'warning' : ''}`}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <AlertCircle size={16} />
+              <span>{errorBanner.message}</span>
+            </div>
+            {errorBanner.canRetry && (
+              <button className="retry-btn" onClick={startNewSession}>Retry</button>
+            )}
+          </div>
+        )}
+
         {/* Bottom Input Dock */}
         <div className="input-dock">
           <form className="input-box-wrapper" onSubmit={handleSendMessage}>
             <textarea
               ref={textareaRef}
               className="chat-textarea"
-              placeholder="Message your waiting companion..."
+              placeholder={!sessionId ? 'Connecting to session...' : 'Message your waiting companion...'}
               rows={1}
               value={inputValue}
               onChange={handleTextareaChange}
               onKeyDown={handleKeyDown}
+              disabled={!sessionId || loading}
             />
             <button
               type="submit"
               className="send-button"
-              disabled={!inputValue.trim() || loading}
+              disabled={!inputValue.trim() || loading || !sessionId}
             >
               <Send size={18} />
             </button>
@@ -326,7 +367,7 @@ export default function App() {
                 <div className="hud-card-title">Safety & Triage Rating</div>
                 <div className="metric-row">
                   <span className="metric-label">Risk Category:</span>
-                  <span className={`badge-risk ${telemetry.safety_and_risk.level.toLowerCase()}`}>
+                  <span className={`badge-risk ${getRiskBadgeClass(telemetry.safety_and_risk.level)}`}>
                     {telemetry.safety_and_risk.level}
                   </span>
                 </div>
@@ -422,21 +463,21 @@ export default function App() {
             </div>
 
             <div className="dossier-modal-body">
-              {/* Executive Summary */}
+              {/* 1. Executive Summary */}
               <div className="dossier-section">
                 <div className="dossier-sec-title">1. Executive Summary & Diagnostic Impression</div>
                 <p style={{ fontSize: '0.92rem', marginBottom: '8px' }}>
                   <strong>Provisional Diagnosis:</strong> {dossierData.executive_summary?.provisional_diagnostic_impression}
                 </p>
                 <p style={{ fontSize: '0.92rem', marginBottom: '8px' }}>
-                  <strong>Acute Severity:</strong> <span className={`badge-risk ${dossierData.executive_summary?.acute_severity_status?.toLowerCase().includes('high') ? 'red' : 'green'}`}>{dossierData.executive_summary?.acute_severity_status}</span>
+                  <strong>Acute Severity:</strong> <span className={`badge-risk ${getRiskBadgeClass(dossierData.executive_summary?.acute_severity_status)}`}>{dossierData.executive_summary?.acute_severity_status}</span>
                 </p>
                 <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: '8px' }}>
                   {dossierData.executive_summary?.clinical_synopsis}
                 </p>
               </div>
 
-              {/* MSE Breakdown */}
+              {/* 2. MSE Breakdown */}
               <div className="dossier-section">
                 <div className="dossier-sec-title">2. Mental Status Examination (MSE)</div>
                 <div className="mse-grid">
@@ -449,15 +490,76 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Consultation Talking Points */}
+              {/* 3. Somatic & Neurovegetative Profile */}
+              {dossierData.somatic_profile && (
+                <div className="dossier-section">
+                  <div className="dossier-sec-title">3. Somatic & Neurovegetative Profile</div>
+                  <div className="mse-grid">
+                    <div><strong>Sleep Architecture:</strong> {dossierData.somatic_profile.sleep_architecture}</div>
+                    <div><strong>Energy & Neurovegetative:</strong> {dossierData.somatic_profile.energy_and_neurovegetative}</div>
+                    <div style={{ gridColumn: '1 / -1' }}>
+                      <strong>Somatic Complaints:</strong> {dossierData.somatic_profile.somatic_complaints?.length > 0 ? dossierData.somatic_profile.somatic_complaints.join(', ') : 'None explicitly reported'}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* 4. Safety & Crisis Screener */}
+              {dossierData.safety_and_risk && (
+                <div className="dossier-section">
+                  <div className="dossier-sec-title">4. Safety & Crisis Screener</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                    <span style={{ fontSize: '0.92rem' }}><strong>Risk Category:</strong></span>
+                    <span className={`badge-risk ${getRiskBadgeClass(dossierData.safety_and_risk.level)}`}>
+                      {dossierData.safety_and_risk.level}
+                    </span>
+                  </div>
+                  {dossierData.safety_and_risk.risk_markers?.length > 0 && (
+                    <p style={{ fontSize: '0.88rem', marginBottom: '6px' }}>
+                      <strong>Risk Markers:</strong> {dossierData.safety_and_risk.risk_markers.join(', ')}
+                    </p>
+                  )}
+                  {dossierData.safety_and_risk.verbatim_evidence?.length > 0 && (
+                    <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
+                      <strong>Verbatim Evidence:</strong> <em>"{dossierData.safety_and_risk.verbatim_evidence.join('; ')}"</em>
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {/* 5. Affect Trajectory Summary */}
+              {dossierData.affect_trajectory_summary && (
+                <div className="dossier-section">
+                  <div className="dossier-sec-title">5. Affect Trajectory & Temporal Dynamics</div>
+                  <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                    {dossierData.affect_trajectory_summary}
+                  </p>
+                </div>
+              )}
+
+              {/* 6. Consultation Talking Points */}
               <div className="dossier-section">
-                <div className="dossier-sec-title">3. High-Yield Doctor Consultation Talking Points</div>
+                <div className="dossier-sec-title">6. High-Yield Doctor Consultation Talking Points</div>
                 <ul style={{ paddingLeft: '20px', fontSize: '0.88rem', color: '#bae6fd', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {dossierData.attending_physician_consultation_angles?.map((angle, idx) => (
                     <li key={idx}>{angle}</li>
                   ))}
                 </ul>
               </div>
+
+              {/* 7. Recommended Screening Instruments */}
+              {dossierData.recommended_screening_instruments?.length > 0 && (
+                <div className="dossier-section">
+                  <div className="dossier-sec-title">7. Recommended Clinical Screening Instruments</div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '6px' }}>
+                    {dossierData.recommended_screening_instruments.map((inst, idx) => (
+                      <span key={idx} style={{ background: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', padding: '4px 10px', borderRadius: '4px', fontSize: '0.82rem', border: '1px solid rgba(56, 189, 248, 0.2)' }}>
+                        {inst}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

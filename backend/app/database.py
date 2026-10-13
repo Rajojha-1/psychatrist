@@ -4,6 +4,7 @@ import logging
 from typing import Dict, Any, Optional, List
 from datetime import datetime
 from dotenv import load_dotenv
+import time
 
 load_dotenv()
 
@@ -15,6 +16,21 @@ DB_NAME = "psychiatric_intake_db"
 # Fallback local in-memory/file storage if Mongo daemon isn't running
 local_sessions: Dict[str, Dict[str, Any]] = {}
 local_dossiers: Dict[str, Dict[str, Any]] = {}
+
+MAX_LOCAL_SESSIONS = 100
+SESSION_TTL_SECONDS = 7200  # 2 hours
+
+
+def _evict_stale_local_sessions():
+    """Remove expired sessions and enforce max capacity for in-memory fallback."""
+    now = time.time()
+    expired = [sid for sid, data in local_sessions.items()
+               if now - data.get("_created_ts", now) > SESSION_TTL_SECONDS]
+    for sid in expired:
+        del local_sessions[sid]
+    while len(local_sessions) > MAX_LOCAL_SESSIONS:
+        oldest = min(local_sessions, key=lambda s: local_sessions[s].get("_created_ts", 0))
+        del local_sessions[oldest]
 
 mongo_client = None
 db = None
@@ -47,6 +63,8 @@ async def save_session(session_data: Dict[str, Any]):
             return
         except Exception as e:
             logger.error(f"Mongo save error: {e}")
+    _evict_stale_local_sessions()
+    session_data.setdefault("_created_ts", time.time())
     local_sessions[session_id] = session_data
 
 async def get_session(session_id: str) -> Optional[Dict[str, Any]]:

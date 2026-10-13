@@ -1,9 +1,10 @@
 import os
 import uuid
 import logging
-from datetime import datetime
+import asyncio
+from datetime import datetime, timezone
 from typing import Dict, Any, List, Optional
-from fastapi import FastAPI, HTTPException, BackgroundTasks
+from fastapi import FastAPI, HTTPException, BackgroundTasks, Body
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
@@ -34,6 +35,44 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+_session_locks: Dict[str, asyncio.Lock] = {}
+
+def _get_session_lock(session_id: str) -> asyncio.Lock:
+    if session_id not in _session_locks:
+        _session_locks[session_id] = asyncio.Lock()
+    return _session_locks[session_id]
+
+DOMAIN_KEYS = [
+    "patient_identity",
+    "chief_stressor_context",
+    "workplace_or_environment",
+    "sleep_architecture",
+    "somatic_physical_exhaustion",
+    "cognitive_distortions_and_loops",
+    "anhedonia_and_emotional_range",
+    "social_support_vs_isolation",
+    "coping_mechanisms_and_escapes",
+]
+
+def _update_domain_coverage(session: Dict[str, Any], telemetry: PassBTelemetry):
+    """Ensure monotonic domain progression and compute server-side score."""
+    accumulated = session.get("accumulated_domains", {})
+    for key in DOMAIN_KEYS:
+        val = getattr(telemetry.domain_coverage, key, False)
+        if val or accumulated.get(key, False):
+            accumulated[key] = True
+            setattr(telemetry.domain_coverage, key, True)
+        else:
+            accumulated[key] = False
+    session["accumulated_domains"] = accumulated
+
+    covered_count = sum(1 for k in DOMAIN_KEYS if accumulated.get(k, False))
+    calculated_score = min(100, int((covered_count / len(DOMAIN_KEYS)) * 100))
+    current_score = session.get("completeness_score", 0)
+    final_score = max(current_score, calculated_score, telemetry.domain_coverage.completeness_score)
+    telemetry.domain_coverage.completeness_score = final_score
+    session["completeness_score"] = final_score
+
 @app.on_event("startup")
 async def startup_event():
     await init_db()
@@ -41,7 +80,7 @@ async def startup_event():
 @app.post("/api/session/start", response_model=StartSessionResponse)
 async def start_session(req: StartSessionRequest):
     session_id = str(uuid.uuid4())[:8]
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
 
     # Initial natural greeting - completely chill, zero therapy cringe
     greeting = (
@@ -55,6 +94,7 @@ async def start_session(req: StartSessionRequest):
         "created_at": now.isoformat(),
         "status": "IN_PROGRESS",
         "completeness_score": 0,
+        "accumulated_domains": {},
         "is_critical_alert": False,
         "messages": [
             {"role": "assistant", "content": greeting, "timestamp": now.isoformat()}
@@ -72,87 +112,87 @@ async def start_session(req: StartSessionRequest):
 
 @app.post("/api/session/chat", response_model=SendMessageResponse)
 async def chat_message(req: SendMessageRequest):
-    session = await get_session(req.session_id)
-    if not session:
-        raise HTTPException(status_code=404, detail="Session not found")
+    async with _get_session_lock(req.session_id):
+        session = await get_session(req.session_id)
+        if not session:
+            raise HTTPException(status_code=404, detail="Session not found")
 
-    user_msg = req.message.strip()
-    if not user_msg:
-        raise HTTPException(status_code=400, detail="Empty message")
+        user_msg = req.message.strip()
+        if not user_msg:
+            raise HTTPException(status_code=400, detail="Empty message")
 
-    now = datetime.utcnow()
-    # Append user message
-    session["messages"].append({
-        "role": "user",
-        "content": user_msg,
-        "timestamp": now.isoformat()
-    })
+        now = datetime.now(timezone.utc)
+        # Append user message
+        session["messages"].append({
+            "role": "user",
+            "content": user_msg,
+            "timestamp": now.isoformat()
+        })
 
-    # Step 1: Run Pass B (Background Evaluator & Director)
-    telemetry: PassBTelemetry = await evaluate_turn(
-        conversation_history=session["messages"],
-        current_patient_name=session.get("patient_name")
-    )
+        # Step 1: Run Pass B (Background Evaluator & Director)
+        telemetry: PassBTelemetry = await evaluate_turn(
+            conversation_history=session["messages"],
+            current_patient_name=session.get("patient_name"),
+            last_telemetry=session.get("latest_telemetry")
+        )
 
-    # Update patient name if captured
-    if telemetry.patient_name and not session.get("patient_name"):
-        session["patient_name"] = telemetry.patient_name
+        # Update patient name if captured
+        if telemetry.patient_name and not session.get("patient_name"):
+            session["patient_name"] = telemetry.patient_name
 
-    # Check critical alerts
-    is_critical = (telemetry.safety_and_risk.level == "RED_CRITICAL")
-    if is_critical:
-        session["is_critical_alert"] = True
+        # Check critical alerts
+        is_critical = (telemetry.safety_and_risk.level == "RED_CRITICAL")
+        if is_critical:
+            session["is_critical_alert"] = True
 
-    # Update telemetry state
-    telemetry_dict = telemetry.model_dump()
-    session["telemetry_history"].append(telemetry_dict)
-    session["latest_telemetry"] = telemetry_dict
-    session["completeness_score"] = telemetry.domain_coverage.completeness_score
+        # Server-side monotonic domain accumulation
+        _update_domain_coverage(session, telemetry)
 
-    # Step 2: Run Pass A (Conversational Companion with Steering Directive)
-    reply = await generate_companion_reply(
-        conversation_history=session["messages"],
-        steering_directive=telemetry.steering_directive
-    )
+        # Update telemetry state
+        telemetry_dict = telemetry.model_dump()
+        session["telemetry_history"].append(telemetry_dict)
+        session["latest_telemetry"] = telemetry_dict
 
-    # Append companion reply
-    session["messages"].append({
-        "role": "assistant",
-        "content": reply,
-        "timestamp": datetime.utcnow().isoformat()
-    })
+        # Step 2: Run Pass A (Conversational Companion with Steering Directive)
+        reply = await generate_companion_reply(
+            conversation_history=session["messages"],
+            steering_directive=telemetry.steering_directive
+        )
 
-    if telemetry.session_action == "INITIATE_WRAPUP":
-        session["status"] = "READY_FOR_REPORT"
+        # Append companion reply
+        session["messages"].append({
+            "role": "assistant",
+            "content": reply,
+            "timestamp": datetime.now(timezone.utc).isoformat()
+        })
 
-    await save_session(session)
+        if telemetry.session_action == "INITIATE_WRAPUP":
+            session["status"] = "READY_FOR_REPORT"
 
-    return SendMessageResponse(
-        reply=reply,
-        completeness_score=telemetry.domain_coverage.completeness_score,
-        session_action=telemetry.session_action,
-        is_critical_alert=is_critical,
-        telemetry=telemetry
-    )
+        await save_session(session)
+
+        return SendMessageResponse(
+            reply=reply,
+            completeness_score=telemetry.domain_coverage.completeness_score,
+            session_action=telemetry.session_action,
+            is_critical_alert=is_critical,
+            telemetry=telemetry
+        )
 
 @app.post("/api/session/conclude", response_model=DoctorDossier)
-async def conclude_session(session_id: Optional[str] = None):
+async def conclude_session(
+    session_id: Optional[str] = None,
+    body: Optional[Dict[str, Any]] = Body(None)
+):
     sid = session_id
+    if not sid and body and isinstance(body, dict):
+        sid = body.get("session_id")
     if not sid:
-        sessions = await list_active_sessions()
-        if sessions:
-            sid = sessions[0]["session_id"]
-        else:
-            raise HTTPException(status_code=400, detail="session_id is required")
+        raise HTTPException(status_code=400, detail="session_id is required")
 
     session = await get_session(sid)
     if not session:
-        sessions = await list_active_sessions()
-        if sessions:
-            session = sessions[0]
-            sid = session["session_id"]
-        else:
-            raise HTTPException(status_code=404, detail="Session not found")
+        raise HTTPException(status_code=404, detail=f"Session '{sid}' not found")
 
     dossier = await generate_doctor_dossier(
         session_id=sid,
