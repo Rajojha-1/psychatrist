@@ -27,7 +27,7 @@ export default function App() {
   const [initError, setInitError] = useState(null);
   const [chatError, setChatError] = useState(null);
 
-  // Sync URL when toggling views
+  // Sync URL when toggling views (accessed directly via ?view=doctor)
   const handleSwitchToDoctor = () => {
     setView('doctor');
     const url = new URL(window.location.href);
@@ -116,14 +116,13 @@ export default function App() {
     );
   }
 
-  // Patient Facing Screens
+  // Patient Facing Screens (Strictly zero doctor portal access)
   if (patientScreen === 'checkin') {
     return (
       <CheckInCard
         onCheckIn={handleCheckIn}
         loading={loadingInit}
         error={initError}
-        onDoctorAccess={handleSwitchToDoctor}
       />
     );
   }
@@ -138,7 +137,6 @@ export default function App() {
       onSendMessage={handleSendMessage}
       onExitRoom={handleExitRoom}
       errorBanner={chatError}
-      onDoctorAccess={handleSwitchToDoctor}
     />
   );
 }

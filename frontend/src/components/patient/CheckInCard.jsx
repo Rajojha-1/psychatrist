@@ -90,17 +90,6 @@ export default function CheckInCard({ onCheckIn, loading, error, onDoctorAccess 
       <div className="absolute bottom-7 left-0 right-0 text-center text-xs sm:text-sm text-gray-400 font-normal tracking-wide">
         Doctor is currently in session • Average wait time: 8 mins
       </div>
-
-      {/* Discreet Staff Portal in bottom right */}
-      {onDoctorAccess && (
-        <button
-          className="absolute bottom-6 right-6 text-xs text-gray-500 hover:text-gray-300 transition-colors cursor-pointer z-20"
-          onClick={onDoctorAccess}
-          title="Clinical Staff Access"
-        >
-          Staff Portal →
-        </button>
-      )}
     </div>
   );
 }
