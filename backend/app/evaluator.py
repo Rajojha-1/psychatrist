@@ -39,22 +39,34 @@ async def evaluate_turn(
     if current_patient_name:
         system_instruction += f"\n\nKNOWN PATIENT NAME: {current_patient_name}"
 
+    # Format transcript cleanly inside data block to prevent model from continuing dialogue
+    transcript_lines = []
+    for msg in conversation_history:
+        speaker = "PATIENT" if msg["role"] == "user" else "COMPANION"
+        transcript_lines.append(f"{speaker}: {msg['content']}")
+    transcript_block = "\n".join(transcript_lines)
+
+    user_eval_prompt = f"""[CONVERSATION TRANSCRIPT TO EVALUATE]:
+{transcript_block}
+
+[MANDATORY INSTRUCTION]:
+You are NOT the companion. Do NOT continue the dialogue. Do NOT reply to the patient.
+Your ONLY task is to evaluate this conversation and return the clinical JSON analysis matching the schema.
+Begin your response immediately with '{{' and end with '}}'.
+"""
+
     messages = [
-        {"role": "system", "content": system_instruction}
+        {"role": "system", "content": system_instruction},
+        {"role": "user", "content": user_eval_prompt}
     ]
 
-    for msg in conversation_history:
-        role = "user" if msg["role"] == "user" else "assistant"
-        prefix = "PATIENT: " if msg["role"] == "user" else "COMPANION: "
-        messages.append({"role": role, "content": prefix + msg["content"]})
-
     try:
-        # Compatible with both Groq and OpenAI
+        # Compatible with Groq, Gemini, and OpenAI
         response = await client.chat.completions.create(
             model=OPENAI_MODEL,
             messages=messages,
             response_format={"type": "json_object"},
-            temperature=0.2,
+            temperature=0.1,
         )
         raw_content = response.choices[0].message.content or ""
         # Strip any <think> reasoning tags
