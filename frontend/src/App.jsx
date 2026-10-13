@@ -18,7 +18,9 @@ import {
 } from 'lucide-react';
 import './App.css';
 
-const API_BASE = import.meta.env.VITE_API_BASE ?? (window.location.hostname === 'localhost' ? 'http://localhost:8000' : '');
+const API_BASE = import.meta.env.VITE_API_BASE !== undefined
+  ? import.meta.env.VITE_API_BASE
+  : (window.location.hostname === 'localhost' ? 'http://localhost:8000' : '');
 
 export default function App() {
   const [sessionId, setSessionId] = useState(null);
