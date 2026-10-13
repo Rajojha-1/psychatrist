@@ -26,17 +26,20 @@ async def generate_companion_reply(
     Natural, concise, grounded, zero cheesy therapy clichés.
     Incorporate the secret steering directive invisibly.
     """
-    system_content = PASS_A_SYSTEM_PROMPT
-    if steering_directive:
-        system_content += f"\n\n[SECRET STEERING DIRECTIVE FOR THIS TURN]:\n{steering_directive}\n(Incorporate this topic/tone smoothly without ever revealing or quoting the directive)."
-
     messages = [
-        {"role": "system", "content": system_content}
+        {"role": "system", "content": PASS_A_SYSTEM_PROMPT}
     ]
 
     for msg in conversation_history:
         role = "user" if msg["role"] == "user" else "assistant"
         messages.append({"role": role, "content": msg["content"]})
+
+    # High-priority turn directive: Placed at the very end so it dominates LLM attention
+    if steering_directive:
+        directive_instruction = f"""[IMPERATIVE TURN GOAL]:
+React briefly to their latest sentence (1 short sentence max), and then YOUR NEXT QUESTION MUST ASK: "{steering_directive}".
+Do NOT get stuck in a loop on the old topic. Seamlessly execute this exact shift now."""
+        messages.append({"role": "system", "content": directive_instruction})
 
     try:
         response = await client.chat.completions.create(
