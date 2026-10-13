@@ -586,3 +586,161 @@
   letter-spacing: 0.5px;
   margin-bottom: 12px;
 }
+
+/* ==========================================================================
+   RESPONSIVE DESIGN & MOBILE DRAWER STYLES
+   ========================================================================== */
+.hamburger-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
+.hamburger-btn:hover {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+.mobile-close-sidebar {
+  display: none;
+  padding: 6px;
+  color: var(--text-secondary);
+  border-radius: 6px;
+}
+
+.mobile-close-sidebar:hover {
+  background: var(--bg-surface-hover);
+  color: var(--text-primary);
+}
+
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 25;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.mse-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  font-size: 0.86rem;
+}
+
+@media (max-width: 768px) {
+  .hamburger-btn {
+    display: flex;
+  }
+
+  .mobile-close-sidebar {
+    display: flex;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 30;
+    width: 280px;
+    transform: translateX(-100%);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .top-navbar {
+    padding: 0 12px;
+  }
+
+  .waiting-room-tag {
+    display: none;
+  }
+
+  .app-title-text {
+    font-size: 0.88rem;
+  }
+
+  .hud-toggle-pill {
+    padding: 6px 10px;
+    font-size: 0.76rem;
+  }
+
+  .doctor-hud-drawer {
+    width: 100%;
+    top: 0;
+    z-index: 40;
+    box-shadow: none;
+  }
+
+  .messages-container {
+    padding: 16px 12px 120px;
+  }
+
+  .message-bubble {
+    max-width: 92%;
+    font-size: 0.92rem;
+    padding: 10px 14px;
+  }
+
+  .message-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 0.72rem;
+  }
+
+  .input-dock {
+    padding: 8px 12px 14px;
+  }
+
+  .input-box-wrapper {
+    padding: 6px 8px 6px 14px;
+    border-radius: 22px;
+  }
+
+  .chat-textarea {
+    font-size: 0.92rem;
+  }
+
+  .send-button {
+    width: 32px;
+    height: 32px;
+  }
+
+  .input-disclaimer {
+    display: none;
+  }
+
+  .modal-overlay {
+    padding: 10px;
+  }
+
+  .dossier-modal-container {
+    max-height: 96vh;
+    border-radius: 14px;
+  }
+
+  .dossier-modal-header {
+    padding: 14px 16px;
+  }
+
+  .dossier-modal-body {
+    padding: 16px;
+    gap: 14px;
+  }
+
+  .mse-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+

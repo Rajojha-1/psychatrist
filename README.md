@@ -95,3 +95,19 @@ chmod +x deploy_ec2.sh
 ```
 
 Done! Your full stack (MongoDB + FastAPI + React Nginx) is now live on your EC2 public IP.
+
+---
+
+## 🔄 Automated CI/CD (GitHub Actions)
+
+A full CI/CD pipeline is configured in `.github/workflows/deploy.yml`. On every `git push` to `main`, GitHub Actions will:
+1. Validate and test backend dependencies and Pydantic schemas.
+2. Build the production React application bundle.
+3. SSH into your EC2 instance, pull the latest code, and rebuild Docker containers with zero downtime!
+
+### To activate CI/CD:
+In your GitHub repo: **Settings → Secrets and variables → Actions → New repository secret**:
+- `EC2_HOST`: Your EC2 Public IP (e.g. `100.30.202.11`)
+- `EC2_USER`: `ubuntu`
+- `EC2_SSH_KEY`: The entire content of your AWS `.pem` private key file (including `-----BEGIN OPENSSH PRIVATE KEY-----` and `-----END OPENSSH PRIVATE KEY-----`).
+

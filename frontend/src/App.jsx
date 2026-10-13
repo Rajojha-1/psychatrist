@@ -13,7 +13,8 @@ import {
   AlertCircle,
   Eye,
   Printer,
-  ChevronRight
+  ChevronRight,
+  Menu
 } from 'lucide-react';
 import './App.css';
 
@@ -26,6 +27,7 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [telemetry, setTelemetry] = useState(null);
   const [hudOpen, setHudOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [dossierModalOpen, setDossierModalOpen] = useState(false);
   const [dossierData, setDossierData] = useState(null);
   const [loadingDossier, setLoadingDossier] = useState(false);
@@ -152,11 +154,15 @@ export default function App() {
   return (
     <div className="app-layout">
       {/* ================= SIDEBAR ================= */}
-      <aside className="sidebar">
+      {sidebarOpen && <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)} />}
+      <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          <button className="new-chat-btn" onClick={startNewSession}>
+          <button className="new-chat-btn" onClick={() => { startNewSession(); setSidebarOpen(false); }}>
             <Plus size={18} />
             <span>New Waiting Session</span>
+          </button>
+          <button className="mobile-close-sidebar" onClick={() => setSidebarOpen(false)}>
+            <X size={18} />
           </button>
         </div>
 
@@ -171,7 +177,7 @@ export default function App() {
         <div className="sidebar-footer">
           <button
             className="doctor-hud-btn"
-            onClick={() => setHudOpen(!hudOpen)}
+            onClick={() => { setHudOpen(!hudOpen); setSidebarOpen(false); }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Stethoscope size={16} />
@@ -189,9 +195,12 @@ export default function App() {
         {/* Top Navbar */}
         <header className="top-navbar">
           <div className="navbar-left">
+            <button className="hamburger-btn" onClick={() => setSidebarOpen(true)}>
+              <Menu size={20} />
+            </button>
             <div className="app-title-badge">
               <span className="status-dot"></span>
-              <span>Intake Companion</span>
+              <span className="app-title-text">Intake Companion</span>
               <span className="waiting-room-tag">Waiting Room AI</span>
             </div>
           </div>
@@ -202,7 +211,7 @@ export default function App() {
               onClick={() => setHudOpen(!hudOpen)}
             >
               <Eye size={14} />
-              <span>{hudOpen ? 'Hide Clinical Telemetry' : 'Doctor HUD'}</span>
+              <span className="hud-toggle-text">{hudOpen ? 'Hide Telemetry' : 'Doctor HUD'}</span>
             </button>
           </div>
         </header>
@@ -429,7 +438,7 @@ export default function App() {
               {/* MSE Breakdown */}
               <div className="dossier-section">
                 <div className="dossier-sec-title">2. Mental Status Examination (MSE)</div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', fontSize: '0.86rem' }}>
+                <div className="mse-grid">
                   <div><strong>Appearance & Engagement:</strong> {dossierData.mental_status_exam?.appearance_and_engagement}</div>
                   <div><strong>Speech & Flow:</strong> {dossierData.mental_status_exam?.speech_and_psychomotor}</div>
                   <div><strong>Subjective Mood:</strong> {dossierData.mental_status_exam?.mood_subjective}</div>
