@@ -195,7 +195,7 @@ export default function App() {
         {/* Top Navbar */}
         <header className="top-navbar">
           <div className="navbar-left">
-            <button className="hamburger-btn" onClick={() => setSidebarOpen(true)}>
+            <button className="hamburger-btn" onClick={() => setSidebarOpen(true)} aria-label="Open sidebar menu" title="Open Menu">
               <Menu size={20} />
             </button>
             <div className="app-title-badge">
