@@ -65,3 +65,33 @@ npm run dev
 
 Open [http://localhost:5173](http://localhost:5173) in your browser.
 Click **Doctor HUD** in the top-right navbar to view live clinical telemetry.
+
+---
+
+## ☁️ AWS EC2 Deployment (Production)
+
+### 1. Launch EC2 Instance:
+- **AMI:** Ubuntu 22.04 or 24.04 LTS
+- **Instance Type:** `t3.small` or `t3.medium` (recommended)
+- **Security Group (Inbound Rules):**
+  - **SSH (Port 22):** Your IP
+  - **HTTP (Port 80):** `0.0.0.0/0` (Web UI & Nginx Reverse Proxy)
+  - **HTTPS (Port 443):** `0.0.0.0/0` (SSL if configured)
+  - **Custom TCP (Port 8000):** Optional / testing direct API access
+
+### 2. SSH into your EC2 and Run:
+
+```bash
+git clone https://github.com/Rajojha-1/psychatrist.git
+cd psychatrist
+
+# Create your .env and insert your Groq/OpenAI API key:
+cp backend/.env.example backend/.env
+nano backend/.env
+
+# Run automated deployment:
+chmod +x deploy_ec2.sh
+./deploy_ec2.sh
+```
+
+Done! Your full stack (MongoDB + FastAPI + React Nginx) is now live on your EC2 public IP.
