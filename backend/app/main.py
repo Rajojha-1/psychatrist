@@ -136,13 +136,26 @@ async def chat_message(req: SendMessageRequest):
     )
 
 @app.post("/api/session/conclude", response_model=DoctorDossier)
-async def conclude_session(session_id: str):
-    session = await get_session(session_id)
+async def conclude_session(session_id: Optional[str] = None):
+    sid = session_id
+    if not sid:
+        sessions = await list_active_sessions()
+        if sessions:
+            sid = sessions[0]["session_id"]
+        else:
+            raise HTTPException(status_code=400, detail="session_id is required")
+
+    session = await get_session(sid)
     if not session:
-        raise HTTPException(status_code=404, detail="Session not found")
+        sessions = await list_active_sessions()
+        if sessions:
+            session = sessions[0]
+            sid = session["session_id"]
+        else:
+            raise HTTPException(status_code=404, detail="Session not found")
 
     dossier = await generate_doctor_dossier(
-        session_id=session_id,
+        session_id=sid,
         patient_name=session.get("patient_name") or "Waiting Patient",
         conversation_history=session["messages"],
         telemetry_history=session["telemetry_history"]
