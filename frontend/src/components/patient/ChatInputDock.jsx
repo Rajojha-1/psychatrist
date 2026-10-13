@@ -30,11 +30,14 @@ export default function ChatInputDock({
   }, [inputValue]);
 
   return (
-    <div className="input-dock">
-      <form className="input-box-wrapper" onSubmit={(e) => { e.preventDefault(); onSendMessage(); }}>
+    <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center px-4 pb-6 pt-10 bg-gradient-to-t from-[#0a0d14] via-[#0a0d14]/90 to-transparent z-20 pointer-events-auto">
+      <form
+        className="w-full max-w-3xl bg-[#121826]/85 backdrop-blur-2xl border border-white/10 rounded-full px-5 py-2.5 flex items-end gap-3 shadow-[0_12px_40px_rgba(0,0,0,0.6)] focus-within:border-teal-400/50 focus-within:ring-2 focus-within:ring-teal-400/20 transition-all"
+        onSubmit={(e) => { e.preventDefault(); onSendMessage(); }}
+      >
         <textarea
           ref={textareaRef}
-          className="chat-textarea"
+          className="flex-1 bg-transparent border-none outline-none text-white text-base placeholder-gray-500 resize-none py-1.5 max-h-40 leading-relaxed"
           placeholder="Message your waiting companion..."
           rows={1}
           value={inputValue}
@@ -44,7 +47,7 @@ export default function ChatInputDock({
         />
         <button
           type="submit"
-          className="send-button"
+          className="w-10 h-10 rounded-full bg-[#99f6e4] text-[#0f3d39] flex items-center justify-center flex-shrink-0 shadow-[0_0_20px_rgba(153,246,228,0.5)] hover:shadow-[0_0_28px_rgba(153,246,228,0.75)] hover:scale-105 active:scale-95 disabled:opacity-35 disabled:shadow-none disabled:pointer-events-none transition-all cursor-pointer"
           disabled={!inputValue.trim() || loading || disabled}
           aria-label="Send message"
         >
@@ -52,8 +55,8 @@ export default function ChatInputDock({
         </button>
       </form>
 
-      <div className="input-disclaimer">
-        Private conversation • Relax and chat freely while you wait
+      <div className="mt-3 text-center text-xs text-gray-500 font-medium tracking-wide">
+        Private conversation • Relax and chat freely
       </div>
     </div>
   );
