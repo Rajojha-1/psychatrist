@@ -82,19 +82,23 @@ async def start_session(req: StartSessionRequest):
     session_id = str(uuid.uuid4())[:8]
     now = datetime.now(timezone.utc)
 
-    # Initial natural greeting - completely chill, zero therapy cringe
-    greeting = (
-        "Hey, take a seat and settle in. Waiting rooms are always pretty dull—what can I call you by the way?"
-    )
+    if req.patient_name and req.patient_name.strip():
+        patient_clean = req.patient_name.strip()
+        greeting = f"Hey {patient_clean}, take a seat and settle in. Waiting rooms are always pretty dull—how has your day been going?"
+        initial_domains = {"patient_identity": True}
+    else:
+        patient_clean = None
+        greeting = "Hey, take a seat and settle in. Waiting rooms are always pretty dull—what can I call you by the way?"
+        initial_domains = {}
 
     session_data = {
         "session_id": session_id,
-        "patient_name": req.patient_name,
+        "patient_name": patient_clean,
         "doctor_id": req.doctor_id,
         "created_at": now.isoformat(),
         "status": "IN_PROGRESS",
-        "completeness_score": 0,
-        "accumulated_domains": {},
+        "completeness_score": 11 if patient_clean else 0,
+        "accumulated_domains": initial_domains,
         "is_critical_alert": False,
         "messages": [
             {"role": "assistant", "content": greeting, "timestamp": now.isoformat()}

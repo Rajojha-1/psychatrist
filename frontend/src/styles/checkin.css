@@ -1,0 +1,225 @@
+/* ==========================================================================
+   PATIENT CHECK-IN SCREEN STYLES
+   ========================================================================== */
+
+.checkin-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100vw;
+  background-color: #0b0f19;
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+}
+
+/* Atmospheric Glow Meshes */
+.ambient-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(140px);
+  pointer-events: none;
+  opacity: 0.35;
+  transition: all 0.5s ease;
+}
+
+.amber-glow {
+  top: 10%;
+  left: 20%;
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.4) 0%, transparent 70%);
+}
+
+.teal-glow {
+  bottom: 12%;
+  right: 18%;
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(circle, rgba(16, 163, 127, 0.45) 0%, transparent 70%);
+}
+
+.checkin-card {
+  position: relative;
+  z-index: 10;
+  max-width: 640px;
+  width: 100%;
+  background: rgba(18, 24, 38, 0.72);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 44px 40px;
+  display: flex;
+  flex-direction: column;
+  animation: fadeInCard 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInCard {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.clinic-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  background: rgba(16, 163, 127, 0.12);
+  border: 1px solid rgba(16, 163, 127, 0.3);
+  color: #34d399;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  margin-bottom: 22px;
+}
+
+.sparkle-icon {
+  color: #34d399;
+}
+
+.checkin-title {
+  font-size: 1.85rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #f3f4f6;
+  letter-spacing: -0.02em;
+  margin-bottom: 14px;
+}
+
+.checkin-subtitle {
+  font-size: 1.05rem;
+  color: #9ca3af;
+  margin-bottom: 26px;
+  font-weight: 400;
+}
+
+.checkin-form {
+  width: 100%;
+}
+
+.input-group {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.checkin-input {
+  flex: 1;
+  background: rgba(11, 15, 25, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 14px 18px;
+  font-size: 1rem;
+  color: #f9fafb;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.checkin-input:focus {
+  border-color: #10a37f;
+  box-shadow: 0 0 0 3px rgba(16, 163, 127, 0.25);
+  background: rgba(15, 21, 35, 0.95);
+}
+
+.checkin-input::placeholder {
+  color: #6b7280;
+}
+
+.checkin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, #10a37f, #0d9488);
+  color: #ffffff;
+  border-radius: 14px;
+  font-size: 0.96rem;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(16, 163, 127, 0.35);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.checkin-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(16, 163, 127, 0.45);
+  background: linear-gradient(135deg, #14b8a6, #0f766e);
+}
+
+.checkin-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.checkin-error {
+  margin-top: 14px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+  font-size: 0.86rem;
+}
+
+.checkin-footer {
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.82rem;
+  color: #6b7280;
+  text-align: center;
+}
+
+.doctor-portal-link {
+  position: absolute;
+  bottom: 18px;
+  right: 22px;
+  font-size: 0.78rem;
+  color: #6b7280;
+  background: transparent;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+  z-index: 20;
+}
+
+.doctor-portal-link:hover {
+  color: #9ca3af;
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 640px) {
+  .checkin-card {
+    padding: 30px 22px;
+    border-radius: 20px;
+  }
+  .checkin-title {
+    font-size: 1.45rem;
+  }
+  .checkin-subtitle {
+    font-size: 0.95rem;
+  }
+  .input-group {
+    flex-direction: column;
+  }
+  .checkin-btn {
+    width: 100%;
+  }
+}

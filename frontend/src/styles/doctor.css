@@ -1,0 +1,543 @@
+/* ==========================================================================
+   DOCTOR CLINICAL COMMAND CENTER & ADMIN PORTAL STYLES
+   ========================================================================== */
+
+.doctor-portal-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background-color: #0d1322;
+  overflow: hidden;
+}
+
+/* Header */
+.doctor-portal-header {
+  height: 64px;
+  background: #111827;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  flex-shrink: 0;
+  z-index: 20;
+}
+
+.portal-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.portal-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #f3f4f6;
+  letter-spacing: -0.01em;
+}
+
+.portal-sub {
+  font-size: 0.74rem;
+  color: #9ca3af;
+  display: block;
+}
+
+.back-to-patient-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #d1d5db;
+  font-size: 0.84rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.back-to-patient-btn:hover {
+  background: rgba(16, 163, 127, 0.15);
+  border-color: rgba(16, 163, 127, 0.4);
+  color: #34d399;
+}
+
+/* Main Workspace */
+.doctor-portal-workspace {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Left Sidebar Queue */
+.doctor-queue-sidebar {
+  width: 320px;
+  background: #111827;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.queue-header {
+  padding: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.queue-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.queue-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #f3f4f6;
+}
+
+.queue-refresh-btn {
+  padding: 4px;
+  color: #9ca3af;
+  border-radius: 6px;
+  transition: color 0.2s;
+}
+
+.queue-refresh-btn:hover {
+  color: #38bdf8;
+}
+
+.queue-stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.74rem;
+  color: #9ca3af;
+  margin-bottom: 10px;
+}
+
+.queue-critical-flag {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #f87171;
+  font-weight: 600;
+}
+
+.queue-search-input {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #1f2937;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.82rem;
+  color: #f3f4f6;
+  outline: none;
+}
+
+.queue-search-input:focus {
+  border-color: #38bdf8;
+}
+
+.queue-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.queue-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 0.85rem;
+}
+
+.queue-empty span {
+  font-size: 0.76rem;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.queue-card {
+  background: #1f2937;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.queue-card:hover {
+  background: #283548;
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+.queue-card.selected {
+  background: rgba(56, 189, 248, 0.1);
+  border-color: #38bdf8;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.15);
+}
+
+.queue-card.critical-border {
+  border-color: rgba(239, 68, 68, 0.6);
+}
+
+.queue-card-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.patient-avatar-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(56, 189, 248, 0.2);
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.patient-meta {
+  flex: 1;
+  overflow: hidden;
+}
+
+.patient-name {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #f3f4f6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.session-id {
+  font-size: 0.72rem;
+  color: #9ca3af;
+  font-family: var(--font-mono);
+}
+
+.queue-card-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 8px;
+}
+
+.battery-mini-bar {
+  margin-bottom: 6px;
+}
+
+.battery-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: #9ca3af;
+  margin-bottom: 3px;
+}
+
+.progress-track {
+  width: 100%;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10a37f, #38bdf8);
+  border-radius: 999px;
+  transition: width 0.3s;
+}
+
+.queue-card-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: #9ca3af;
+}
+
+/* Right Main Telemetry Panel */
+.doctor-main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.telemetry-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #9ca3af;
+  text-align: center;
+  padding: 40px;
+}
+
+.telemetry-empty-state h3 {
+  font-size: 1.15rem;
+  color: #e5e7eb;
+  margin-bottom: 6px;
+}
+
+.telemetry-dashboard {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Telemetry Header */
+.telemetry-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #111827;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 18px 24px;
+  margin-bottom: 24px;
+}
+
+.telemetry-patient-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.telemetry-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(16, 163, 127, 0.3), rgba(56, 189, 248, 0.3));
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.telemetry-patient-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #f3f4f6;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.session-tag {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: #9ca3af;
+  font-family: var(--font-mono);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.telemetry-status-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+  font-size: 0.82rem;
+  color: #9ca3af;
+}
+
+.status-divider {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.generate-dossier-primary-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #0284c7, #0f766e);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+  transition: all 0.2s;
+}
+
+.generate-dossier-primary-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.55);
+}
+
+.generate-dossier-primary-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Telemetry Grid */
+.telemetry-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.telemetry-card {
+  background: #111827;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.full-width-card {
+  grid-column: 1 / -1;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.card-header h4 {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+.metric-metric-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 0.85rem;
+}
+
+.metric-name {
+  color: #9ca3af;
+}
+
+.metric-value {
+  color: #f3f4f6;
+  font-weight: 600;
+}
+
+.risk-chip {
+  display: inline-block;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #f87171;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.74rem;
+  margin-right: 6px;
+  margin-bottom: 4px;
+}
+
+.verbatim-quote-box {
+  margin-top: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 2px solid #38bdf8;
+  padding: 8px 12px;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.78rem;
+  color: #bae6fd;
+}
+
+/* Steering Directive Card */
+.directive-card {
+  border-color: rgba(16, 163, 127, 0.25);
+  background: rgba(16, 163, 127, 0.04);
+}
+
+.steering-directive-text {
+  background: rgba(10, 14, 23, 0.8);
+  border: 1px dashed rgba(16, 163, 127, 0.4);
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 0.84rem;
+  color: #a7f3d0;
+  font-family: var(--font-mono);
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.directive-sub {
+  font-size: 0.78rem;
+  color: #9ca3af;
+}
+
+.directive-sub strong {
+  color: #38bdf8;
+}
+
+/* 9 Domain Grid */
+.domains-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.domain-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  transition: all 0.2s;
+}
+
+.domain-chip.covered {
+  background: rgba(16, 163, 127, 0.12);
+  border: 1px solid rgba(16, 163, 127, 0.3);
+  color: #d1fae5;
+}
+
+.domain-chip.uncovered {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: #6b7280;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive Doctor Portal */
+@media (max-width: 900px) {
+  .doctor-portal-workspace {
+    flex-direction: column;
+  }
+  .doctor-queue-sidebar {
+    width: 100%;
+    height: 240px;
+  }
+  .telemetry-grid {
+    grid-template-columns: 1fr;
+  }
+  .domains-grid {
+    grid-template-columns: 1fr;
+  }
+}

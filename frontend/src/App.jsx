@@ -1,569 +1,144 @@
-import React, { useState, useEffect, useRef } from 'react';
-import {
-  Send,
-  Plus,
-  Stethoscope,
-  Activity,
-  X,
-  ShieldAlert,
-  Moon,
-  Brain,
-  FileText,
-  CheckCircle2,
-  AlertCircle,
-  Eye,
-  Printer,
-  ChevronRight,
-  Menu
-} from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import CheckInCard from './components/patient/CheckInCard';
+import WaitingRoomChat from './components/patient/WaitingRoomChat';
+import DoctorPortal from './components/doctor/DoctorPortal';
+import { startSession, sendChatMessage } from './services/api';
 import './App.css';
 
-// In production on Vercel, requests use relative path '' which vercel.json proxies over HTTPS to EC2
-const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:8000' : '';
-
-const getRiskBadgeClass = (level) => {
-  if (!level) return 'green';
-  const l = String(level).toUpperCase();
-  if (l.includes('RED') || l.includes('CRITICAL')) return 'red';
-  if (l.includes('AMBER') || l.includes('YELLOW') || l.includes('MODERATE')) return 'amber';
-  return 'green';
-};
-
 export default function App() {
+  // Navigation: 'patient' or 'doctor'
+  const [view, setView] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('view') === 'doctor' || window.location.pathname === '/doctor'
+      ? 'doctor'
+      : 'patient';
+  });
+
+  // Patient Sub-view: 'checkin' or 'chat'
+  const [patientScreen, setPatientScreen] = useState('checkin');
+
+  // Active Patient Session State
   const [sessionId, setSessionId] = useState(null);
+  const [patientName, setPatientName] = useState('');
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [telemetry, setTelemetry] = useState(null);
-  const [hudOpen, setHudOpen] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [dossierModalOpen, setDossierModalOpen] = useState(false);
-  const [dossierData, setDossierData] = useState(null);
-  const [loadingDossier, setLoadingDossier] = useState(false);
-  const [errorBanner, setErrorBanner] = useState(null);
+  const [loadingChat, setLoadingChat] = useState(false);
+  const [loadingInit, setLoadingInit] = useState(false);
+  const [initError, setInitError] = useState(null);
+  const [chatError, setChatError] = useState(null);
 
-  const messagesEndRef = useRef(null);
-  const textareaRef = useRef(null);
+  // Sync URL when toggling views
+  const handleSwitchToDoctor = () => {
+    setView('doctor');
+    const url = new URL(window.location.href);
+    url.searchParams.set('view', 'doctor');
+    window.history.pushState({}, '', url);
+  };
 
-  // Auto-scroll on new message
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, loading]);
+  const handleSwitchToPatient = () => {
+    setView('patient');
+    const url = new URL(window.location.href);
+    url.searchParams.delete('view');
+    window.history.pushState({}, '', url);
+  };
 
-  // Initialize intake session on mount
-  useEffect(() => {
-    startNewSession();
-  }, []);
-
-  const startNewSession = async () => {
+  // Patient Check-in Action
+  const handleCheckIn = async (enteredName) => {
     try {
-      setLoading(true);
-      setErrorBanner(null);
-      const res = await fetch(`${API_BASE}/api/session/start`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ doctor_id: 'dr_default' })
-      });
-      if (!res.ok) throw new Error('Failed to initialize session');
-      const data = await res.json();
+      setLoadingInit(true);
+      setInitError(null);
+      setPatientName(enteredName);
+
+      const data = await startSession(enteredName);
       setSessionId(data.session_id);
       setMessages([
         { role: 'assistant', content: data.greeting }
       ]);
-      setTelemetry(null);
-      setDossierData(null);
+      setPatientScreen('chat');
     } catch (err) {
-      console.error('Failed to start session:', err);
-      setErrorBanner({
-        type: 'error',
-        message: 'Could not connect to session server. Please check your network and click Retry.',
-        canRetry: true
-      });
+      console.error('Failed to initialize intake room:', err);
+      setInitError('Could not connect to the clinic server. Please check your network and try again.');
     } finally {
-      setLoading(false);
+      setLoadingInit(false);
     }
   };
 
-  const handleSendMessage = async (e) => {
-    if (e) e.preventDefault();
+  // Patient Message Send Action
+  const handleSendMessage = async () => {
     const text = inputValue.trim();
-    if (!text || loading) return;
-    if (!sessionId) {
-      setErrorBanner({
-        type: 'error',
-        message: 'No active session. Please click Retry to connect.',
-        canRetry: true
-      });
-      return;
-    }
+    if (!text || loadingChat || !sessionId) return;
 
-    const newMsgs = [...messages, { role: 'user', content: text }];
-    setMessages(newMsgs);
+    setChatError(null);
+    const updatedMessages = [...messages, { role: 'user', content: text }];
+    setMessages(updatedMessages);
     setInputValue('');
-    setErrorBanner(null);
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-    }
 
-    setLoading(true);
+    setLoadingChat(true);
     try {
-      const res = await fetch(`${API_BASE}/api/session/chat`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          session_id: sessionId,
-          message: text
-        })
-      });
-
-      if (!res.ok) throw new Error('Failed to send message');
-      const data = await res.json();
-
-      setMessages([...newMsgs, { role: 'assistant', content: data.reply }]);
-      if (data.telemetry) {
-        setTelemetry(data.telemetry);
-      }
+      const data = await sendChatMessage(sessionId, text);
+      setMessages([...updatedMessages, { role: 'assistant', content: data.reply }]);
     } catch (err) {
-      console.error('Chat error:', err);
-      setErrorBanner({
+      console.error('Chat transmission error:', err);
+      setChatError({
         type: 'warning',
-        message: 'Network issue communicating with companion server.',
+        message: 'Network issue communicating with companion. Please try re-sending.',
         canRetry: false
       });
       setMessages([
-        ...newMsgs,
-        { role: 'assistant', content: "Fair enough. Waiting around can be pretty dull honestly. Did you have a long drive getting here?" }
+        ...updatedMessages,
+        {
+          role: 'assistant',
+          content: "Sorry, spaced out there for a second. Go on though, what were you saying?"
+        }
       ]);
     } finally {
-      setLoading(false);
+      setLoadingChat(false);
     }
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    }
+  // Leave Waiting Room Action
+  const handleExitRoom = () => {
+    setSessionId(null);
+    setPatientName('');
+    setMessages([]);
+    setInputValue('');
+    setChatError(null);
+    setPatientScreen('checkin');
   };
 
-  const handleTextareaChange = (e) => {
-    setInputValue(e.target.value);
-    e.target.style.height = 'auto';
-    e.target.style.height = Math.min(e.target.scrollHeight, 160) + 'px';
-  };
+  // ================= RENDER =================
+  if (view === 'doctor') {
+    return (
+      <DoctorPortal
+        onBackToPatientView={handleSwitchToPatient}
+        activePatientSessionId={sessionId}
+      />
+    );
+  }
 
-  const fetchDossier = async () => {
-    if (!sessionId) return;
-    setLoadingDossier(true);
-    try {
-      const res = await fetch(`${API_BASE}/api/session/conclude?session_id=${sessionId}`, {
-        method: 'POST'
-      });
-      if (!res.ok) throw new Error('Failed to generate report');
-      const data = await res.json();
-      setDossierData(data);
-      setDossierModalOpen(true);
-    } catch (err) {
-      console.error('Dossier error:', err);
-      // Fallback preview
-      try {
-        const repRes = await fetch(`${API_BASE}/api/doctor/report/${sessionId}`);
-        const repData = await repRes.json();
-        setDossierData(repData);
-        setDossierModalOpen(true);
-      } catch (e) {
-        alert('Could not synthesize report. Please ensure at least 2 messages are sent.');
-      }
-    } finally {
-      setLoadingDossier(false);
-    }
-  };
+  // Patient Facing Screens
+  if (patientScreen === 'checkin') {
+    return (
+      <CheckInCard
+        onCheckIn={handleCheckIn}
+        loading={loadingInit}
+        error={initError}
+        onDoctorAccess={handleSwitchToDoctor}
+      />
+    );
+  }
 
   return (
-    <div className="app-layout">
-      {/* ================= SIDEBAR ================= */}
-      {sidebarOpen && <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)} />}
-      <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
-        <div className="sidebar-header">
-          <button className="new-chat-btn" onClick={() => { startNewSession(); setSidebarOpen(false); }}>
-            <Plus size={18} />
-            <span>New Waiting Session</span>
-          </button>
-          <button className="mobile-close-sidebar" onClick={() => setSidebarOpen(false)}>
-            <X size={18} />
-          </button>
-        </div>
-
-        <div className="sidebar-content">
-          <div className="sidebar-section-title">Active Intake</div>
-          <div className="history-item active">
-            <Activity size={16} color="var(--accent-teal)" />
-            <span>Waiting Room Session #{sessionId || '...'}</span>
-          </div>
-        </div>
-
-        <div className="sidebar-footer">
-          <button
-            className="doctor-hud-btn"
-            onClick={() => { setHudOpen(!hudOpen); setSidebarOpen(false); }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Stethoscope size={16} />
-              <span>Doctor Monitor HUD</span>
-            </div>
-            <span style={{ fontSize: '0.75rem', opacity: 0.8 }}>
-              {hudOpen ? 'HIDE' : 'VIEW'}
-            </span>
-          </button>
-        </div>
-      </aside>
-
-      {/* ================= MAIN CHAT AREA ================= */}
-      <main className="chat-main">
-        {/* Top Navbar */}
-        <header className="top-navbar">
-          <div className="navbar-left">
-            <button className="hamburger-btn" onClick={() => setSidebarOpen(true)} aria-label="Open sidebar menu" title="Open Menu">
-              <Menu size={20} />
-            </button>
-            <div className="app-title-badge">
-              <span className="status-dot"></span>
-              <span className="app-title-text">Intake Companion</span>
-              <span className="waiting-room-tag">Waiting Room AI</span>
-            </div>
-          </div>
-
-          <div className="navbar-right">
-            <button
-              className={`hud-toggle-pill ${hudOpen ? 'active' : ''}`}
-              onClick={() => setHudOpen(!hudOpen)}
-            >
-              <Eye size={14} />
-              <span className="hud-toggle-text">{hudOpen ? 'Hide Telemetry' : 'Doctor HUD'}</span>
-            </button>
-          </div>
-        </header>
-
-        {/* Message Stream */}
-        <div className="messages-container">
-          <div className="messages-wrapper">
-            {messages.map((msg, i) => (
-              <div key={i} className={`message-row ${msg.role}`}>
-                {msg.role === 'assistant' && (
-                  <div className="message-avatar companion">
-                    AI
-                  </div>
-                )}
-                <div className="message-bubble">
-                  {msg.content}
-                </div>
-                {msg.role === 'user' && (
-                  <div className="message-avatar user">
-                    You
-                  </div>
-                )}
-              </div>
-            ))}
-
-            {loading && (
-              <div className="message-row assistant">
-                <div className="message-avatar companion">
-                  AI
-                </div>
-                <div className="typing-bubble">
-                  <span className="dot-pulse"></span>
-                  <span className="dot-pulse"></span>
-                  <span className="dot-pulse"></span>
-                </div>
-              </div>
-            )}
-
-            <div ref={messagesEndRef} />
-          </div>
-        </div>
-
-        {/* Error Banner */}
-        {errorBanner && (
-          <div className={`error-banner ${errorBanner.type === 'warning' ? 'warning' : ''}`}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <AlertCircle size={16} />
-              <span>{errorBanner.message}</span>
-            </div>
-            {errorBanner.canRetry && (
-              <button className="retry-btn" onClick={startNewSession}>Retry</button>
-            )}
-          </div>
-        )}
-
-        {/* Bottom Input Dock */}
-        <div className="input-dock">
-          <form className="input-box-wrapper" onSubmit={handleSendMessage}>
-            <textarea
-              ref={textareaRef}
-              className="chat-textarea"
-              placeholder={!sessionId ? 'Connecting to session...' : 'Message your waiting companion...'}
-              rows={1}
-              value={inputValue}
-              onChange={handleTextareaChange}
-              onKeyDown={handleKeyDown}
-              disabled={!sessionId || loading}
-            />
-            <button
-              type="submit"
-              className="send-button"
-              disabled={!inputValue.trim() || loading || !sessionId}
-            >
-              <Send size={18} />
-            </button>
-          </form>
-          <div className="input-disclaimer">
-            Waiting for your doctor's appointment? Relax and chat freely.
-          </div>
-        </div>
-      </main>
-
-      {/* ================= SECRET DOCTOR CLINICAL HUD ================= */}
-      <aside className={`doctor-hud-drawer ${hudOpen ? 'open' : ''}`}>
-        <div className="hud-header">
-          <div className="hud-title">
-            <Stethoscope size={18} />
-            <span>CLINICAL MONITOR (OBSERVER)</span>
-          </div>
-          <button onClick={() => setHudOpen(false)}>
-            <X size={18} color="var(--text-secondary)" />
-          </button>
-        </div>
-
-        <div className="hud-content">
-          {telemetry ? (
-            <>
-              {/* Patient Identity & Tone */}
-              <div className="hud-card">
-                <div className="hud-card-title">Patient Affect & State</div>
-                <div className="metric-row">
-                  <span className="metric-label">Identified:</span>
-                  <span className="metric-val">{telemetry.patient_name || 'Anonymous Intake'}</span>
-                </div>
-                <div className="metric-row">
-                  <span className="metric-label">Observed Tone:</span>
-                  <span className="metric-val" style={{ color: 'var(--accent-blue)' }}>
-                    {telemetry.affect_and_tone.primary_tone}
-                  </span>
-                </div>
-                <div className="metric-row">
-                  <span className="metric-label">Valence / Arousal:</span>
-                  <span className="metric-val">
-                    {telemetry.affect_and_tone.valence > 0 ? '+' : ''}{telemetry.affect_and_tone.valence.toFixed(2)} / {telemetry.affect_and_tone.arousal_agitation.toFixed(2)}
-                  </span>
-                </div>
-                <div className="metric-row">
-                  <span className="metric-label">Cynicism / Masking:</span>
-                  <span className="metric-val">{(telemetry.affect_and_tone.masking_cynicism_level * 100).toFixed(0)}%</span>
-                </div>
-              </div>
-
-              {/* Triage & Safety */}
-              <div className="hud-card">
-                <div className="hud-card-title">Safety & Triage Rating</div>
-                <div className="metric-row">
-                  <span className="metric-label">Risk Category:</span>
-                  <span className={`badge-risk ${getRiskBadgeClass(telemetry.safety_and_risk.level)}`}>
-                    {telemetry.safety_and_risk.level}
-                  </span>
-                </div>
-                {telemetry.safety_and_risk.verbatim_evidence?.length > 0 && (
-                  <div style={{ marginTop: '8px', fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
-                    Evidence: <em>"{telemetry.safety_and_risk.verbatim_evidence.join(', ')}"</em>
-                  </div>
-                )}
-              </div>
-
-              {/* 9-Domain Battery Progress */}
-              <div className="hud-card">
-                <div className="hud-card-title">Psychiatric Intake Battery</div>
-                <div className="metric-row">
-                  <span className="metric-label">Battery Completion:</span>
-                  <span className="metric-val" style={{ color: 'var(--accent-teal)' }}>
-                    {telemetry.domain_coverage.completeness_score}%
-                  </span>
-                </div>
-                <div className="metric-row">
-                  <span className="metric-label">Next Target Domain:</span>
-                  <span className="metric-val" style={{ color: 'var(--accent-purple)', fontSize: '0.8rem' }}>
-                    {telemetry.domain_coverage.next_domain_to_explore}
-                  </span>
-                </div>
-              </div>
-
-              {/* Cognitive & Somatic */}
-              <div className="hud-card">
-                <div className="hud-card-title">Cognitive & Somatic Correlates</div>
-                <div className="metric-row">
-                  <span className="metric-label">Distortions:</span>
-                  <span className="metric-val" style={{ fontSize: '0.8rem' }}>
-                    {telemetry.cognitive_distortions?.length > 0 ? telemetry.cognitive_distortions.join(', ') : 'None detected'}
-                  </span>
-                </div>
-                <div className="metric-row" style={{ marginTop: '6px' }}>
-                  <span className="metric-label">Sleep:</span>
-                  <span className="metric-val" style={{ fontSize: '0.8rem' }}>
-                    {telemetry.somatic_indicators.sleep_status}
-                  </span>
-                </div>
-              </div>
-
-              {/* Hidden Steering Directive */}
-              <div className="hud-card">
-                <div className="hud-card-title">Secret Steering Directive (Pass B → Pass A)</div>
-                <div className="directive-box">
-                  {telemetry.steering_directive}
-                </div>
-              </div>
-
-              {/* Dossier Generator Button */}
-              <button
-                className="generate-dossier-btn"
-                onClick={fetchDossier}
-                disabled={loadingDossier}
-              >
-                <FileText size={16} />
-                <span>{loadingDossier ? 'Synthesizing...' : 'Generate Full Doctor Dossier'}</span>
-              </button>
-            </>
-          ) : (
-            <div style={{ textAlign: 'center', padding: '40px 10px', color: 'var(--text-tertiary)' }}>
-              <Brain size={32} style={{ marginBottom: '12px', opacity: 0.5 }} />
-              <p style={{ fontSize: '0.85rem' }}>Awaiting first patient interaction to calculate clinical telemetry...</p>
-            </div>
-          )}
-        </div>
-      </aside>
-
-      {/* ================= CONFIDENTIAL DOSSIER MODAL ================= */}
-      {dossierModalOpen && dossierData && (
-        <div className="modal-overlay" onClick={() => setDossierModalOpen(false)}>
-          <div className="dossier-modal-container" onClick={(e) => e.stopPropagation()}>
-            <div className="dossier-modal-header">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Stethoscope size={20} color="var(--accent-blue)" />
-                <h3 style={{ fontSize: '1.05rem', fontWeight: 700 }}>CONFIDENTIAL PSYCHIATRIC CLINICAL DOSSIER</h3>
-              </div>
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <button
-                  className="hud-toggle-pill"
-                  onClick={() => window.print()}
-                >
-                  <Printer size={14} />
-                  <span>Print</span>
-                </button>
-                <button onClick={() => setDossierModalOpen(false)}>
-                  <X size={20} color="var(--text-secondary)" />
-                </button>
-              </div>
-            </div>
-
-            <div className="dossier-modal-body">
-              {/* 1. Executive Summary */}
-              <div className="dossier-section">
-                <div className="dossier-sec-title">1. Executive Summary & Diagnostic Impression</div>
-                <p style={{ fontSize: '0.92rem', marginBottom: '8px' }}>
-                  <strong>Provisional Diagnosis:</strong> {dossierData.executive_summary?.provisional_diagnostic_impression}
-                </p>
-                <p style={{ fontSize: '0.92rem', marginBottom: '8px' }}>
-                  <strong>Acute Severity:</strong> <span className={`badge-risk ${getRiskBadgeClass(dossierData.executive_summary?.acute_severity_status)}`}>{dossierData.executive_summary?.acute_severity_status}</span>
-                </p>
-                <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: '8px' }}>
-                  {dossierData.executive_summary?.clinical_synopsis}
-                </p>
-              </div>
-
-              {/* 2. MSE Breakdown */}
-              <div className="dossier-section">
-                <div className="dossier-sec-title">2. Mental Status Examination (MSE)</div>
-                <div className="mse-grid">
-                  <div><strong>Appearance & Engagement:</strong> {dossierData.mental_status_exam?.appearance_and_engagement}</div>
-                  <div><strong>Speech & Flow:</strong> {dossierData.mental_status_exam?.speech_and_psychomotor}</div>
-                  <div><strong>Subjective Mood:</strong> {dossierData.mental_status_exam?.mood_subjective}</div>
-                  <div><strong>Objective Affect:</strong> {dossierData.mental_status_exam?.affect_objective}</div>
-                  <div><strong>Thought Process:</strong> {dossierData.mental_status_exam?.thought_process}</div>
-                  <div><strong>Thought Content:</strong> {dossierData.mental_status_exam?.thought_content}</div>
-                </div>
-              </div>
-
-              {/* 3. Somatic & Neurovegetative Profile */}
-              {dossierData.somatic_profile && (
-                <div className="dossier-section">
-                  <div className="dossier-sec-title">3. Somatic & Neurovegetative Profile</div>
-                  <div className="mse-grid">
-                    <div><strong>Sleep Architecture:</strong> {dossierData.somatic_profile.sleep_architecture}</div>
-                    <div><strong>Energy & Neurovegetative:</strong> {dossierData.somatic_profile.energy_and_neurovegetative}</div>
-                    <div style={{ gridColumn: '1 / -1' }}>
-                      <strong>Somatic Complaints:</strong> {dossierData.somatic_profile.somatic_complaints?.length > 0 ? dossierData.somatic_profile.somatic_complaints.join(', ') : 'None explicitly reported'}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* 4. Safety & Crisis Screener */}
-              {dossierData.safety_and_risk && (
-                <div className="dossier-section">
-                  <div className="dossier-sec-title">4. Safety & Crisis Screener</div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-                    <span style={{ fontSize: '0.92rem' }}><strong>Risk Category:</strong></span>
-                    <span className={`badge-risk ${getRiskBadgeClass(dossierData.safety_and_risk.level)}`}>
-                      {dossierData.safety_and_risk.level}
-                    </span>
-                  </div>
-                  {dossierData.safety_and_risk.risk_markers?.length > 0 && (
-                    <p style={{ fontSize: '0.88rem', marginBottom: '6px' }}>
-                      <strong>Risk Markers:</strong> {dossierData.safety_and_risk.risk_markers.join(', ')}
-                    </p>
-                  )}
-                  {dossierData.safety_and_risk.verbatim_evidence?.length > 0 && (
-                    <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
-                      <strong>Verbatim Evidence:</strong> <em>"{dossierData.safety_and_risk.verbatim_evidence.join('; ')}"</em>
-                    </p>
-                  )}
-                </div>
-              )}
-
-              {/* 5. Affect Trajectory Summary */}
-              {dossierData.affect_trajectory_summary && (
-                <div className="dossier-section">
-                  <div className="dossier-sec-title">5. Affect Trajectory & Temporal Dynamics</div>
-                  <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                    {dossierData.affect_trajectory_summary}
-                  </p>
-                </div>
-              )}
-
-              {/* 6. Consultation Talking Points */}
-              <div className="dossier-section">
-                <div className="dossier-sec-title">6. High-Yield Doctor Consultation Talking Points</div>
-                <ul style={{ paddingLeft: '20px', fontSize: '0.88rem', color: '#bae6fd', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  {dossierData.attending_physician_consultation_angles?.map((angle, idx) => (
-                    <li key={idx}>{angle}</li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* 7. Recommended Screening Instruments */}
-              {dossierData.recommended_screening_instruments?.length > 0 && (
-                <div className="dossier-section">
-                  <div className="dossier-sec-title">7. Recommended Clinical Screening Instruments</div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '6px' }}>
-                    {dossierData.recommended_screening_instruments.map((inst, idx) => (
-                      <span key={idx} style={{ background: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', padding: '4px 10px', borderRadius: '4px', fontSize: '0.82rem', border: '1px solid rgba(56, 189, 248, 0.2)' }}>
-                        {inst}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+    <WaitingRoomChat
+      patientName={patientName}
+      messages={messages}
+      loading={loadingChat}
+      inputValue={inputValue}
+      setInputValue={setInputValue}
+      onSendMessage={handleSendMessage}
+      onExitRoom={handleExitRoom}
+      errorBanner={chatError}
+      onDoctorAccess={handleSwitchToDoctor}
+    />
   );
 }
