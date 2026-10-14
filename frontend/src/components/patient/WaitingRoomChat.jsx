@@ -30,18 +30,16 @@ export default function WaitingRoomChat({
   onRetryInit
 }) {
   const chatContainerRef = useRef(null);
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTo({
-        top: chatContainerRef.current.scrollHeight,
-        behavior: 'smooth'
-      });
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages, loading]);
 
   return (
-    <div className="h-full w-full bg-[#080e15] flex flex-col relative overflow-hidden font-sans select-none text-slate-200">
+    <div className="h-screen w-full bg-[#080e15] flex flex-col relative overflow-hidden font-sans text-slate-200">
       {/* Ambient background lighting - Exact match to reference screenshot */}
       {/* Prominent luminous ocean-teal atmosphere spotlight on the center-right */}
       <div
@@ -74,7 +72,7 @@ export default function WaitingRoomChat({
       {/* Messages Stream - Scrollable inside viewport without scrolling outer window */}
       <main
         ref={chatContainerRef}
-        className="flex-1 overflow-y-auto px-4 sm:px-6 pt-8 pb-36 flex justify-center z-10"
+        className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 pt-8 pb-36 flex justify-center z-10 overscroll-contain"
       >
         <div className="w-full max-w-3xl flex flex-col gap-6">
           {messages.map((msg, idx) => (
@@ -82,6 +80,7 @@ export default function WaitingRoomChat({
           ))}
 
           {loading && <MessageBubble isTyping={true} />}
+          <div ref={messagesEndRef} className="h-4 flex-shrink-0" />
         </div>
       </main>
 
