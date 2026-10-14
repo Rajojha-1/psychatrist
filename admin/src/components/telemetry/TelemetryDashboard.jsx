@@ -13,6 +13,7 @@ import {
   Activity,
   Layers
 } from 'lucide-react';
+import ClinicalTrajectoryCharts from './ClinicalTrajectoryCharts';
 
 const INSIGHT_LABELS = {
   precipitating_factors: 'Precipitating Factors (Why Now?)',
@@ -161,6 +162,13 @@ export default function TelemetryDashboard({
       {/* VIEW 1: Clinical Telemetry Grid */}
       {activeView === 'telemetry' ? (
         <div className="space-y-6">
+          {/* Diagnostic Psychometrics & Circumplex Trajectory */}
+          <ClinicalTrajectoryCharts
+            telemetryHistory={session.telemetry_history || []}
+            currentTelemetry={tel}
+            session={session}
+          />
+
           {/* Clinical Insight Map (4 Ps + Observations) */}
           <div className="glass-card rounded-2xl p-6 border border-white/10">
             <div className="flex items-center justify-between mb-4">
