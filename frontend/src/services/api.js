@@ -1,7 +1,19 @@
-// API service module for Stealth Psychiatric Intake
+function getApiBase() {
+  // When running in a browser over HTTPS, calling an insecure HTTP URL directly
+  // triggers browser Mixed Content blocking. Route through Vercel's rewrite proxy instead ('').
+  if (typeof window !== 'undefined' && window.location.protocol === 'https:') {
+    const envBase = import.meta.env.VITE_API_BASE || '';
+    if (envBase.startsWith('https://')) {
+      return envBase.replace(/\/+$/, '');
+    }
+    return '';
+  }
 
-const rawBase = import.meta.env.VITE_API_BASE || (window.location.hostname === 'localhost' ? 'http://localhost:8000' : '');
-const API_BASE = rawBase.replace(/\/+$/, '');
+  const base = import.meta.env.VITE_API_BASE || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:8000' : '');
+  return base.replace(/\/+$/, '');
+}
+
+const API_BASE = getApiBase();
 
 export async function startSession(patientName = null, doctorId = 'dr_default') {
   const res = await fetch(`${API_BASE}/api/session/start`, {
