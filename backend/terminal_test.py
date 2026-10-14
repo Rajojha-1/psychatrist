@@ -68,12 +68,16 @@ async def run_terminal_session():
                 patient_name = telemetry.patient_name
 
             telemetry_history.append(telemetry.model_dump())
-            latest_directive = telemetry.steering_directive
 
-            # 2. Companion Response (Pass A)
+            # 2. Companion Response (Pass A) - Natural peer, not an interrogator
             reply = await generate_companion_reply(
                 conversation_history=conversation_history,
-                steering_directive=latest_directive
+                conversation_mode=telemetry.conversation_mode,
+                active_emotional_thread=telemetry.active_emotional_thread,
+                bridge_context=telemetry.bridge_context,
+                emotional_momentum=telemetry.emotional_momentum,
+                patient_name=patient_name,
+                is_critical=telemetry.safety_and_risk.level == "RED"
             )
             conversation_history.append({"role": "assistant", "content": reply})
 
@@ -90,14 +94,13 @@ async def run_terminal_session():
         table.add_row("Cynicism / Masking", f"{telemetry.affect_and_tone.masking_cynicism_level:.2f}")
         table.add_row("Linguistic Markers", f"Self-Focus: {telemetry.linguistic_analysis.pronoun_density_self_focus:.2f} | Absolutist: {telemetry.linguistic_analysis.absolutist_words_present} | Resignation: {telemetry.linguistic_analysis.negation_fatalism_markers}")
         table.add_row("Cognitive Distortions", ", ".join(telemetry.cognitive_distortions) if telemetry.cognitive_distortions else "[dim]None noted[/dim]")
-        table.add_row("Sleep / Somatic", f"{telemetry.somatic_indicators.sleep_status} | Energy: {telemetry.somatic_indicators.energy_and_fatigue}")
+        table.add_row("Sleep / Somatic", f"{telemetry.somatic_indicators.sleep_disturbances} | Energy: {telemetry.somatic_indicators.energy_and_fatigue}")
         
         # Risk coloring
         risk_color = "green" if telemetry.safety_and_risk.level == "GREEN" else ("yellow" if telemetry.safety_and_risk.level == "AMBER" else "bold red")
         table.add_row("Safety & Risk", f"[{risk_color}]{telemetry.safety_and_risk.level}[/{risk_color}] (Evidence: {telemetry.safety_and_risk.verbatim_evidence})")
-        table.add_row("Next Clinical Target", f"[bold magenta]{telemetry.domain_coverage.next_domain_to_explore}[/bold magenta]")
-        table.add_row("Intake Completeness", f"[bold]{telemetry.domain_coverage.completeness_score}%[/bold] (Action: {telemetry.session_action} | Turn {len(telemetry_history)}/9+)")
-        table.add_row("Secret Steering Directive", f"[yellow]'{telemetry.steering_directive}'[/yellow]")
+        table.add_row("Conversation Mode", f"[bold magenta]{telemetry.conversation_mode}[/bold magenta] (Thread: '{telemetry.active_emotional_thread}')")
+        table.add_row("Narrative Richness", f"[bold]{telemetry.narrative_richness}%[/bold] (Action: {telemetry.session_action} | Turn {len(telemetry_history)})")
 
         console.print(Panel(table, border_style="blue", title="[bold white on blue] DOCTOR MONITOR (HIDDEN FROM PATIENT) [/bold white on blue]"))
         console.print("[dim]Type your next reply, or type 'report' to view the final Doctor Dossier.[/dim]\n")

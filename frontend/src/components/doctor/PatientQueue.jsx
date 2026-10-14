@@ -86,13 +86,13 @@ export default function PatientQueue({
                 <div className="queue-card-bottom">
                   <div className="battery-mini-bar">
                     <div className="battery-label">
-                      <span>Battery</span>
-                      <span>{item.completeness_score}%</span>
+                      <span>Richness</span>
+                      <span>{item.narrative_richness ?? item.completeness_score ?? 0}%</span>
                     </div>
                     <div className="progress-track">
                       <div
                         className="progress-fill"
-                        style={{ width: `${Math.min(100, item.completeness_score)}%` }}
+                        style={{ width: `${Math.min(100, item.narrative_richness ?? item.completeness_score ?? 0)}%` }}
                       />
                     </div>
                   </div>

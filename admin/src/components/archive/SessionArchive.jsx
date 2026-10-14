@@ -78,13 +78,13 @@ export default function SessionArchive({ sessions, onSelectSession, onGenerateDo
 
                   <div className="space-y-1.5 text-xs text-slate-400">
                     <div className="flex justify-between text-[11px]">
-                      <span>Intake Completion:</span>
-                      <span className="font-semibold text-teal-300">{s.completeness_score || 0}%</span>
+                      <span>Narrative Richness:</span>
+                      <span className="font-semibold text-teal-300">{s.narrative_richness || s.completeness_score || 0}%</span>
                     </div>
                     <div className="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
                       <div
                         className="h-full bg-teal-400 rounded-full"
-                        style={{ width: `${s.completeness_score || 0}%` }}
+                        style={{ width: `${s.narrative_richness || s.completeness_score || 0}%` }}
                       />
                     </div>
                     <div className="flex justify-between text-[10px] text-slate-500 pt-1">

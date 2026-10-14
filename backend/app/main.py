@@ -25,7 +25,7 @@ load_dotenv(override=True)
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("main_api")
 
-app = FastAPI(title="Stealth Psychiatric Intake & Clinical Telemetry API", version="1.0.0")
+app = FastAPI(title="Stealth Psychiatric Intake & Clinical Telemetry API", version="2.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -42,36 +42,15 @@ def _get_session_lock(session_id: str) -> asyncio.Lock:
         _session_locks[session_id] = asyncio.Lock()
     return _session_locks[session_id]
 
-DOMAIN_KEYS = [
-    "patient_identity",
-    "chief_stressor_context",
-    "workplace_or_environment",
-    "sleep_architecture",
-    "somatic_physical_exhaustion",
-    "cognitive_distortions_and_loops",
-    "anhedonia_and_emotional_range",
-    "social_support_vs_isolation",
-    "coping_mechanisms_and_escapes",
-]
 
-def _update_domain_coverage(session: Dict[str, Any], telemetry: PassBTelemetry):
-    """Ensure monotonic domain progression and compute server-side score."""
-    accumulated = session.get("accumulated_domains", {})
-    for key in DOMAIN_KEYS:
-        val = getattr(telemetry.domain_coverage, key, False)
-        if val or accumulated.get(key, False):
-            accumulated[key] = True
-            setattr(telemetry.domain_coverage, key, True)
-        else:
-            accumulated[key] = False
-    session["accumulated_domains"] = accumulated
+def _update_narrative_richness(session: Dict[str, Any], telemetry: PassBTelemetry):
+    """Ensure narrative richness only increases (monotonic progression)."""
+    current_richness = session.get("narrative_richness", 0)
+    new_richness = telemetry.insight_map.narrative_richness
+    final_richness = max(current_richness, new_richness)
+    telemetry.insight_map.narrative_richness = final_richness
+    session["narrative_richness"] = final_richness
 
-    covered_count = sum(1 for k in DOMAIN_KEYS if accumulated.get(k, False))
-    calculated_score = min(100, int((covered_count / len(DOMAIN_KEYS)) * 100))
-    current_score = session.get("completeness_score", 0)
-    final_score = max(current_score, calculated_score, telemetry.domain_coverage.completeness_score)
-    telemetry.domain_coverage.completeness_score = final_score
-    session["completeness_score"] = final_score
 
 @app.on_event("startup")
 async def startup_event():
@@ -85,11 +64,9 @@ async def start_session(req: StartSessionRequest):
     if req.patient_name and req.patient_name.strip():
         patient_clean = req.patient_name.strip()
         greeting = f"Hey {patient_clean}, take a seat and settle in. Waiting rooms are always pretty dull—how has your day been going?"
-        initial_domains = {"patient_identity": True}
     else:
         patient_clean = None
         greeting = "Hey, take a seat and settle in. Waiting rooms are always pretty dull—what can I call you by the way?"
-        initial_domains = {}
 
     session_data = {
         "session_id": session_id,
@@ -97,8 +74,7 @@ async def start_session(req: StartSessionRequest):
         "doctor_id": req.doctor_id,
         "created_at": now.isoformat(),
         "status": "IN_PROGRESS",
-        "completeness_score": 11 if patient_clean else 0,
-        "accumulated_domains": initial_domains,
+        "narrative_richness": 0,
         "is_critical_alert": False,
         "messages": [
             {"role": "assistant", "content": greeting, "timestamp": now.isoformat()}
@@ -124,9 +100,8 @@ async def get_session_by_id(session_id: str):
         "patient_name": session.get("patient_name"),
         "doctor_id": session.get("doctor_id", "dr_default"),
         "status": session.get("status", "IN_PROGRESS"),
-        "completeness_score": session.get("completeness_score", 0),
+        "narrative_richness": session.get("narrative_richness", 0),
         "is_critical_alert": session.get("is_critical_alert", False),
-        "accumulated_domains": session.get("accumulated_domains", {}),
         "latest_telemetry": session.get("latest_telemetry"),
         "telemetry_history": session.get("telemetry_history", []),
         "created_at": session.get("created_at"),
@@ -155,7 +130,7 @@ async def chat_message(req: SendMessageRequest):
             "timestamp": now.isoformat()
         })
 
-        # Step 1: Run Pass B (Background Evaluator & Director)
+        # Step 1: Run Pass B (Silent Clinical Observer)
         telemetry: PassBTelemetry = await evaluate_turn(
             conversation_history=session["messages"],
             current_patient_name=session.get("patient_name"),
@@ -171,18 +146,21 @@ async def chat_message(req: SendMessageRequest):
         if is_critical:
             session["is_critical_alert"] = True
 
-        # Server-side monotonic domain accumulation
-        _update_domain_coverage(session, telemetry)
+        # Monotonic narrative richness
+        _update_narrative_richness(session, telemetry)
 
         # Update telemetry state
         telemetry_dict = telemetry.model_dump()
         session["telemetry_history"].append(telemetry_dict)
         session["latest_telemetry"] = telemetry_dict
 
-        # Step 2: Run Pass A (Conversational Companion with Steering Directive)
+        # Step 2: Run Pass A (Waiting Room Companion — no clinical steering)
         reply = await generate_companion_reply(
             conversation_history=session["messages"],
-            steering_directive=telemetry.steering_directive,
+            conversation_mode=telemetry.conversation_mode,
+            active_emotional_thread=telemetry.active_emotional_thread,
+            bridge_context=telemetry.bridge_context,
+            emotional_momentum=telemetry.emotional_momentum,
             patient_name=session.get("patient_name"),
             is_critical=is_critical
         )
@@ -201,7 +179,7 @@ async def chat_message(req: SendMessageRequest):
 
         return SendMessageResponse(
             reply=reply,
-            completeness_score=telemetry.domain_coverage.completeness_score,
+            narrative_richness=telemetry.insight_map.narrative_richness,
             session_action=telemetry.session_action,
             is_critical_alert=is_critical,
             telemetry=telemetry
@@ -246,7 +224,7 @@ async def get_doctor_queue():
             "patient_name": s.get("patient_name"),
             "created_at": s.get("created_at"),
             "status": s.get("status", "IN_PROGRESS"),
-            "completeness_score": s.get("completeness_score", 0),
+            "narrative_richness": s.get("narrative_richness", 0),
             "is_critical_alert": s.get("is_critical_alert", False),
             "primary_tone": latest_tel.get("affect_and_tone", {}).get("primary_tone"),
             "risk_level": latest_tel.get("safety_and_risk", {}).get("level"),

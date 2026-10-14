@@ -33,18 +33,20 @@ _ERROR_REPLIES = [
 
 async def generate_companion_reply(
     conversation_history: List[Dict[str, str]],
-    steering_directive: Optional[str] = None,
+    conversation_mode: str = "FOLLOW_THREAD",
+    active_emotional_thread: str = "",
+    bridge_context: Optional[str] = None,
+    emotional_momentum: float = 0.5,
     patient_name: Optional[str] = None,
     is_critical: bool = False
 ) -> str:
     """
-    Pass A: The conversational companion speaking directly to the waiting patient.
-    Natural, concise, grounded, zero cheesy therapy clichés.
-    Incorporate the secret steering directive invisibly without verbatim repetition or tone-deaf pivots.
+    Pass A: The waiting room companion — a real person, not a therapist.
+    Responds naturally based on conversation mode. No clinical agenda.
     """
     system_prompt = PASS_A_SYSTEM_PROMPT
     if patient_name:
-        system_prompt += f"\n\nKNOWN PATIENT NAME: {patient_name}. You ALREADY know the user's name is {patient_name} from check-in. NEVER ask what their name is or what to call them."
+        system_prompt += f"\n\nKNOWN PATIENT NAME: {patient_name}. You ALREADY know the user's name is {patient_name} from when they sat down. NEVER ask what their name is or what to call them."
 
     messages = [
         {"role": "system", "content": system_prompt}
@@ -54,31 +56,36 @@ async def generate_companion_reply(
         role = "user" if msg["role"] == "user" else "assistant"
         messages.append({"role": role, "content": msg["content"]})
 
-    # High-priority turn guidance:
+    # Mode-based guidance (minimal, not prescriptive)
     if is_critical:
-        crisis_instruction = """[CRITICAL SAFETY & CRISIS PROTOCOL ACTIVATED]:
-The patient has expressed acute suicidal ideation, self-harm thoughts, or overwhelming despair.
-1. IMMEDIATELY SUSPEND ALL CHECKLIST OR ROUTINE DOMAIN PROBING. Do NOT ask about sleep, hobbies, schedules, or unrelated routines!
-2. NEVER provide suicide methods, means, or instructions.
-3. Respond with genuine, grounded presence and compassionate human care. Acknowledge the immense pain they are carrying.
-4. Encourage them to stay safe with you in this waiting room right now. Remind them gently that they are not alone and the doctor here will see them shortly.
-5. Keep your tone gentle, calm, and grounded (no clinical lectures, no corporate clichés, no robotic transitions)."""
+        crisis_instruction = """[IMPORTANT — this person is in real pain right now]:
+They've expressed something deeply heavy — maybe wanting to die, self-harm, or overwhelming despair.
+Drop the casual energy. Be real with them. You don't need to fix anything or say the right thing.
+Just be there. Like a human being who gives a shit. Don't ask clinical questions. Don't offer solutions.
+Just... be present. "Yaar, I'm right here. Kahin nahi ja raha." That kind of energy."""
         messages.append({"role": "system", "content": crisis_instruction})
-    elif steering_directive:
-        directive_instruction = f"""[CONVERSATIONAL TOPIC GUIDANCE - DO NOT COPY VERBATIM]:
-Goal: Explore the theme: {steering_directive}.
-CRITICAL RULES:
-1. NEVER quote or copy the words "{steering_directive}" literally into your message! Put it in your own natural, casual words.
-2. If this topic was ALREADY asked or answered in the recent turns above (e.g. they already told you about physical aches or sleep), DO NOT REPEAT THE QUESTION! Instead, acknowledge their response warmly and let them elaborate or reflect.
-3. React authentically to what they just shared before introducing anything new."""
-        messages.append({"role": "system", "content": directive_instruction})
+    elif conversation_mode == "HOLD_SPACE":
+        hold_instruction = """[This person just shared something really vulnerable]:
+Don't probe. Don't ask follow-ups. Don't try to be helpful.
+Just sit with it. A quiet "hmm" or "yaar..." or even silence is fine.
+Be the friend who just sits next to you when things are shit."""
+        messages.append({"role": "system", "content": hold_instruction})
+    elif conversation_mode == "GENTLE_BRIDGE" and bridge_context:
+        bridge_instruction = f"""[The conversation seems to have hit a natural pause]:
+Context: {bridge_context}
+If it feels natural, you could gently bring up something related. But ONLY if it flows.
+If nothing feels right, just react to what they said, share something about yourself, or sit in comfortable silence.
+DO NOT force a topic change. If it feels even slightly unnatural, don't do it."""
+        messages.append({"role": "system", "content": bridge_instruction})
+    # FOLLOW_THREAD = no instruction needed. Just let the model respond naturally to what was said.
+    # The active_emotional_thread is for Pass B's records, not for Pass A to act on.
 
     try:
         response = await client.chat.completions.create(
             model=OPENAI_MODEL,
             messages=messages,
-            temperature=0.7,
-            max_tokens=600
+            temperature=0.85,  # Slightly higher for more natural, varied responses
+            max_tokens=400  # Keep responses short and punchy
         )
         raw_msg = response.choices[0].message.content or ""
         # Strip any <think> reasoning tags if emitted

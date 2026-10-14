@@ -80,7 +80,7 @@ export default function LiveQueue({
             const isSelected = item.session_id === selectedSessionId;
             const isCritical = item.is_critical_alert || item.risk_level === 'RED_CRITICAL';
             const isAmber = item.risk_level === 'AMBER';
-            const score = item.completeness_score || 0;
+            const score = item.narrative_richness || item.completeness_score || 0;
 
             return (
               <div
