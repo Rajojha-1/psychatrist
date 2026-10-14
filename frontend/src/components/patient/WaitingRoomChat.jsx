@@ -36,10 +36,13 @@ export default function WaitingRoomChat({
     window.scrollTo(0, 0);
   }, []);
 
-  // Internal-only scroll: directly update container scrollTop so the window/navbar never moves
+  // Internal-only scroll: directly update container scrollTo so the window/navbar never moves
   useEffect(() => {
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+      chatContainerRef.current.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
     }
   }, [messages, loading]);
 
@@ -89,6 +92,9 @@ export default function WaitingRoomChat({
           ))}
 
           {loading && <MessageBubble isTyping={true} />}
+
+          {/* Safe-zone buffer so latest message is always completely above the floating dock */}
+          <div className="h-44 w-full flex-shrink-0 pointer-events-none" aria-hidden="true" />
         </div>
       </main>
 
