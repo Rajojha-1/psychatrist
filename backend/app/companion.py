@@ -62,21 +62,22 @@ async def generate_companion_reply(
 They just said they want to die or give up.
 🚫 NEVER recite hotline / brochure scripts: DO NOT say "It's okay to feel overwhelmed", "You are not alone in this", "I'm really sorry to hear that".
 🚫 NEVER ask coaching or problem-solving questions.
-Respond with genuine human, brotherly care:
-"Bhai please aisa mat bol. Sunn meri baat, sab bikhra hua lag raha hai I know, par doc se milne aaye hain na dono. Yahan baithe hain saath me, ek ek karke dekh lenge sab, itna mat soch abhi."
+MATCH THEIR LANGUAGE:
+- If English: "Hey please don't say that. Look, I know everything feels completely broken right now, but we're both here to see the doctor. Let's just take it one minute at a time, don't spiral ahead."
+- If Hindi/Hinglish: "Bhai please aisa mat bol. Sunn meri baat, sab bikhra hua lag raha hai I know, par doc se milne aaye hain na dono. Yahan baithe hain saath me, ek ek karke dekh lenge sab, itna mat soch abhi."
 Keep it grounded, warm, short (1-2 sentences), and human."""
         messages.append({"role": "system", "content": crisis_instruction})
     elif conversation_mode == "HOLD_SPACE":
         hold_instruction = """[This person just shared something really vulnerable]:
 Don't probe. Don't ask follow-ups. Don't try to be helpful or coach them.
-Just sit with it. A quiet "hmm" or "yaar..." or simple commiseration.
+Just sit with it. Match their language (English if they wrote in English, Hinglish if Hindi).
 Be the friend who just sits next to you when things are rough."""
         messages.append({"role": "system", "content": hold_instruction})
     elif conversation_mode == "GENTLE_BRIDGE":
         bridge_instruction = f"""[CONVERSATION GUIDANCE]:
 {f'Context: {bridge_context}' if bridge_context else 'The patient seems reserved or the chat has hit a pause.'}
-Break the ice like a warm peer:
-1. Share a quick relatable thought or observation first (e.g. how weird waiting rooms feel, overthinking in the car, or how hard showing up is).
+Break the ice like a warm peer in THEIR LANGUAGE (English if they write English, Hinglish if Hindi):
+1. Share a quick relatable thought or observation first.
 2. Ask an inviting open question about what brought them here.
 3. 🚫 NEVER use conversation-ending pleasantries ("hope it goes smoothly", "hope everything goes okay").
 4. 🚫 NEVER give coaching advice."""
@@ -85,10 +86,11 @@ Break the ice like a warm peer:
         thread_instruction = f"""[CONVERSATION CONTEXT]:
 Active topic: {active_emotional_thread if active_emotional_thread else 'Casual peer chat'}
 RULES:
-1. Commiserate or react naturally to what they said (e.g. if they curse their boss, agree with them!).
+1. Commiserate or react naturally to what they said IN THEIR EXACT LANGUAGE (If they write in English, YOU MUST reply in English!).
 2. 🚫 NEVER ask coaching/problem-solving questions ("Have you thought about...", "Do you think there's a way...", "Have you considered..."). You are NOT a life coach or therapist.
 3. 🚫 NEVER spam "I've been there too" / "I remember when I...".
 4. 🚫 NEVER write long counseling paragraphs. 1-2 short sentences max."""
+        messages.append({"role": "system", "content": thread_instruction})
         messages.append({"role": "system", "content": thread_instruction})
 
     try:
