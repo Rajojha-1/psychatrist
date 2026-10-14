@@ -70,15 +70,20 @@ Don't probe. Don't ask follow-ups. Don't try to be helpful.
 Just sit with it. A quiet "hmm" or "yaar..." or even silence is fine.
 Be the friend who just sits next to you when things are shit."""
         messages.append({"role": "system", "content": hold_instruction})
-    elif conversation_mode == "GENTLE_BRIDGE" and bridge_context:
-        bridge_instruction = f"""[The conversation seems to have hit a natural pause]:
-Context: {bridge_context}
-If it feels natural, you could gently bring up something related. But ONLY if it flows.
-If nothing feels right, just react to what they said, share something about yourself, or sit in comfortable silence.
-DO NOT force a topic change. If it feels even slightly unnatural, don't do it."""
+    elif conversation_mode == "GENTLE_BRIDGE":
+        bridge_instruction = f"""[CONVERSATION GUIDANCE]:
+{f'Context: {bridge_context}' if bridge_context else 'The patient seems reserved or the chat has hit a pause.'}
+Break the ice like a warm peer:
+1. Share a quick relatable thought or personal experience first (e.g. how weird waiting rooms feel, overthinking in the car, or how hard showing up is).
+2. Ask a natural, open-ended question about what brought them here or what finally made them book the appointment.
+3. 🚫 NEVER use conversation-ending pleasantries ("hope it goes smoothly", "hope everything goes okay")."""
         messages.append({"role": "system", "content": bridge_instruction})
-    # FOLLOW_THREAD = no instruction needed. Just let the model respond naturally to what was said.
-    # The active_emotional_thread is for Pass B's records, not for Pass A to act on.
+    elif conversation_mode == "FOLLOW_THREAD" and active_emotional_thread:
+        thread_instruction = f"""[CONVERSATION CONTEXT]:
+Active topic: {active_emotional_thread}
+React naturally like a peer. If the patient gave a brief answer or seems hesitant, normalize it, share a brief relatable thought, and invite them to open up.
+🚫 NEVER use conversation-ending pleasantries ("hope it goes smoothly", "hope everything goes okay")."""
+        messages.append({"role": "system", "content": thread_instruction})
 
     try:
         response = await client.chat.completions.create(
