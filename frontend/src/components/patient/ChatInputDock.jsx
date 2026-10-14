@@ -30,9 +30,9 @@ export default function ChatInputDock({
   }, [inputValue]);
 
   return (
-    <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center px-4 pb-6 pt-10 bg-gradient-to-t from-[#080e15] via-[#080e15]/90 to-transparent z-20 pointer-events-none">
+    <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center px-4 pb-6 pt-10 bg-gradient-to-t from-[#080e15] via-[#080e15]/90 to-transparent z-20 pointer-events-auto">
       <form
-        className="w-full max-w-2xl backdrop-blur-xl rounded-full px-6 py-2.5 flex items-center gap-3 transition-all relative pointer-events-auto"
+        className="w-full max-w-2xl backdrop-blur-xl rounded-full px-6 py-2.5 flex items-center gap-3 transition-all relative"
         style={{
           background: 'rgba(18, 28, 38, 0.72)',
           border: '1px solid rgba(45, 212, 191, 0.35)',
@@ -79,7 +79,7 @@ export default function ChatInputDock({
         </div>
       </form>
 
-      <div className="mt-2.5 text-center text-xs text-slate-500 font-normal tracking-wide pointer-events-auto">
+      <div className="mt-2.5 text-center text-xs text-slate-500 font-normal tracking-wide">
         Private conversation • Relax and chat freely
       </div>
     </div>
