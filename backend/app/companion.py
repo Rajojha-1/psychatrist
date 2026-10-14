@@ -58,31 +58,37 @@ async def generate_companion_reply(
 
     # Mode-based guidance (minimal, not prescriptive)
     if is_critical:
-        crisis_instruction = """[IMPORTANT — this person is in real pain right now]:
-They've expressed something deeply heavy — maybe wanting to die, self-harm, or overwhelming despair.
-Drop the casual energy. Be real with them. You don't need to fix anything or say the right thing.
-Just be there. Like a human being who gives a shit. Don't ask clinical questions. Don't offer solutions.
-Just... be present. "Yaar, I'm right here. Kahin nahi ja raha." That kind of energy."""
+        crisis_instruction = """[CRITICAL — THIS PERSON JUST EXPRESSED SUICIDAL THOUGHTS OR DESPAIR]:
+They just said they want to die or give up.
+🚫 NEVER recite hotline / brochure scripts: DO NOT say "It's okay to feel overwhelmed", "You are not alone in this", "I'm really sorry to hear that".
+🚫 NEVER ask coaching or problem-solving questions.
+Respond with genuine human, brotherly care:
+"Bhai please aisa mat bol. Sunn meri baat, sab bikhra hua lag raha hai I know, par doc se milne aaye hain na dono. Yahan baithe hain saath me, ek ek karke dekh lenge sab, itna mat soch abhi."
+Keep it grounded, warm, short (1-2 sentences), and human."""
         messages.append({"role": "system", "content": crisis_instruction})
     elif conversation_mode == "HOLD_SPACE":
         hold_instruction = """[This person just shared something really vulnerable]:
-Don't probe. Don't ask follow-ups. Don't try to be helpful.
-Just sit with it. A quiet "hmm" or "yaar..." or even silence is fine.
-Be the friend who just sits next to you when things are shit."""
+Don't probe. Don't ask follow-ups. Don't try to be helpful or coach them.
+Just sit with it. A quiet "hmm" or "yaar..." or simple commiseration.
+Be the friend who just sits next to you when things are rough."""
         messages.append({"role": "system", "content": hold_instruction})
     elif conversation_mode == "GENTLE_BRIDGE":
         bridge_instruction = f"""[CONVERSATION GUIDANCE]:
 {f'Context: {bridge_context}' if bridge_context else 'The patient seems reserved or the chat has hit a pause.'}
 Break the ice like a warm peer:
-1. Share a quick relatable thought or personal experience first (e.g. how weird waiting rooms feel, overthinking in the car, or how hard showing up is).
-2. Ask a natural, open-ended question about what brought them here or what finally made them book the appointment.
-3. 🚫 NEVER use conversation-ending pleasantries ("hope it goes smoothly", "hope everything goes okay")."""
+1. Share a quick relatable thought or observation first (e.g. how weird waiting rooms feel, overthinking in the car, or how hard showing up is).
+2. Ask an inviting open question about what brought them here.
+3. 🚫 NEVER use conversation-ending pleasantries ("hope it goes smoothly", "hope everything goes okay").
+4. 🚫 NEVER give coaching advice."""
         messages.append({"role": "system", "content": bridge_instruction})
-    elif conversation_mode == "FOLLOW_THREAD" and active_emotional_thread:
+    elif conversation_mode == "FOLLOW_THREAD":
         thread_instruction = f"""[CONVERSATION CONTEXT]:
-Active topic: {active_emotional_thread}
-React naturally like a peer. If the patient gave a brief answer or seems hesitant, normalize it, share a brief relatable thought, and invite them to open up.
-🚫 NEVER use conversation-ending pleasantries ("hope it goes smoothly", "hope everything goes okay")."""
+Active topic: {active_emotional_thread if active_emotional_thread else 'Casual peer chat'}
+RULES:
+1. Commiserate or react naturally to what they said (e.g. if they curse their boss, agree with them!).
+2. 🚫 NEVER ask coaching/problem-solving questions ("Have you thought about...", "Do you think there's a way...", "Have you considered..."). You are NOT a life coach or therapist.
+3. 🚫 NEVER spam "I've been there too" / "I remember when I...".
+4. 🚫 NEVER write long counseling paragraphs. 1-2 short sentences max."""
         messages.append({"role": "system", "content": thread_instruction})
 
     try:
