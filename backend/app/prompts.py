@@ -100,6 +100,7 @@ Analyze the patient's entire conversation transcript, especially their latest re
      * When the user vents about an unfair manager or conflict, let them vent for a turn before shifting domains!
      * NEVER tell Pass A to repeat or re-ask about hobbies or coping if already mentioned. Pivot forward to somatic exhaustion, thought loops, or isolation.
      * NEVER tell Pass A to offer crisis hotlines or say "are you okay right now".
+      * CRITICAL CRISIS OVERRIDE: If the patient expresses active suicidal ideation, self-harm thoughts, or asks for methods of dying (RED_CRITICAL), IMMEDIATELY halt routine domain hunting! Direct Pass A to stay present with genuine warmth and care, de-escalate gently, and reassure them they are safe here. NEVER direct Pass A to ask about sleep, routines, or checklists during an active crisis!
      * For INITIATE_WRAPUP (only after 8+ turns): Guide Pass A to simply offer warm, grounded validation for the weight they have been carrying, without abruptly announcing any cutoff or saying the doctor is waiting.
 """
 

@@ -34,12 +34,13 @@ _ERROR_REPLIES = [
 async def generate_companion_reply(
     conversation_history: List[Dict[str, str]],
     steering_directive: Optional[str] = None,
-    patient_name: Optional[str] = None
+    patient_name: Optional[str] = None,
+    is_critical: bool = False
 ) -> str:
     """
     Pass A: The conversational companion speaking directly to the waiting patient.
     Natural, concise, grounded, zero cheesy therapy clichés.
-    Incorporate the secret steering directive invisibly.
+    Incorporate the secret steering directive invisibly without verbatim repetition or tone-deaf pivots.
     """
     system_prompt = PASS_A_SYSTEM_PROMPT
     if patient_name:
@@ -53,11 +54,23 @@ async def generate_companion_reply(
         role = "user" if msg["role"] == "user" else "assistant"
         messages.append({"role": role, "content": msg["content"]})
 
-    # High-priority turn directive: Placed at the very end so it dominates LLM attention
-    if steering_directive:
-        directive_instruction = f"""[IMPERATIVE TURN GOAL]:
-React briefly to their latest sentence (1 short sentence max), and then YOUR NEXT QUESTION MUST ASK: "{steering_directive}".
-Do NOT get stuck in a loop on the old topic. Seamlessly execute this exact shift now."""
+    # High-priority turn guidance:
+    if is_critical:
+        crisis_instruction = """[CRITICAL SAFETY & CRISIS PROTOCOL ACTIVATED]:
+The patient has expressed acute suicidal ideation, self-harm thoughts, or overwhelming despair.
+1. IMMEDIATELY SUSPEND ALL CHECKLIST OR ROUTINE DOMAIN PROBING. Do NOT ask about sleep, hobbies, schedules, or unrelated routines!
+2. NEVER provide suicide methods, means, or instructions.
+3. Respond with genuine, grounded presence and compassionate human care. Acknowledge the immense pain they are carrying.
+4. Encourage them to stay safe with you in this waiting room right now. Remind them gently that they are not alone and the doctor here will see them shortly.
+5. Keep your tone gentle, calm, and grounded (no clinical lectures, no corporate clichés, no robotic transitions)."""
+        messages.append({"role": "system", "content": crisis_instruction})
+    elif steering_directive:
+        directive_instruction = f"""[CONVERSATIONAL TOPIC GUIDANCE - DO NOT COPY VERBATIM]:
+Goal: Explore the theme: {steering_directive}.
+CRITICAL RULES:
+1. NEVER quote or copy the words "{steering_directive}" literally into your message! Put it in your own natural, casual words.
+2. If this topic was ALREADY asked or answered in the recent turns above (e.g. they already told you about physical aches or sleep), DO NOT REPEAT THE QUESTION! Instead, acknowledge their response warmly and let them elaborate or reflect.
+3. React authentically to what they just shared before introducing anything new."""
         messages.append({"role": "system", "content": directive_instruction})
 
     try:

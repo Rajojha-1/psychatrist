@@ -183,7 +183,8 @@ async def chat_message(req: SendMessageRequest):
         reply = await generate_companion_reply(
             conversation_history=session["messages"],
             steering_directive=telemetry.steering_directive,
-            patient_name=session.get("patient_name")
+            patient_name=session.get("patient_name"),
+            is_critical=is_critical
         )
 
         # Append companion reply
