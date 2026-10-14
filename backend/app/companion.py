@@ -84,7 +84,7 @@ DO NOT force a topic change. If it feels even slightly unnatural, don't do it.""
         response = await client.chat.completions.create(
             model=OPENAI_MODEL,
             messages=messages,
-            temperature=0.85,  # Slightly higher for more natural, varied responses
+            temperature=0.6,  # Grounded, human, prevents bizarre sarcastic spikes
             max_tokens=400  # Keep responses short and punchy
         )
         raw_msg = response.choices[0].message.content or ""
