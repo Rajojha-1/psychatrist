@@ -41,8 +41,8 @@ export default function PatientTelemetry({
   }
 
   const tel = telemetry || session?.latest_telemetry;
-  const patientName = session?.patient_name || tel?.patient_name || 'Waiting Patient';
-  const riskLevel = tel?.safety_and_risk?.level || session?.risk_level || 'GREEN';
+  const patientName = session?.patient_name || tel?.patient_name || '—';
+  const riskLevel = tel?.safety_and_risk?.level || session?.risk_level || '—';
 
   return (
     <div className="telemetry-dashboard">
@@ -61,7 +61,7 @@ export default function PatientTelemetry({
               <StatusBadge level={riskLevel} />
               <span className="status-divider">•</span>
               <span className="telemetry-tone">
-                Primary Affect: <strong>{tel?.affect_and_tone?.primary_tone || 'Evaluating...'}</strong>
+                Primary Affect: <strong>{tel?.affect_and_tone?.primary_tone || '—'}</strong>
               </span>
               <span className="status-divider">•</span>
               <span className="telemetry-comp">

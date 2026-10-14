@@ -42,49 +42,22 @@ export default function WaitingRoomChat({
 
   return (
     <div className="h-full w-full bg-[#080e15] flex flex-col relative overflow-hidden font-sans select-none text-slate-200">
-      {/* Ambient background lighting - Exact match to Image 1 mockup */}
-      {/* 1. Top-Left soft ambient teal */}
+      {/* Ambient background lighting - Exact match to reference screenshot */}
+      {/* Prominent luminous ocean-teal atmosphere spotlight on the center-right */}
       <div
-        className="absolute -top-24 -left-16 w-[480px] h-[480px] rounded-full pointer-events-none"
+        className="absolute top-[8%] right-[5%] w-[840px] h-[840px] rounded-full pointer-events-none"
         style={{
-          background: 'radial-gradient(circle, rgba(13, 148, 136, 0.16) 0%, transparent 70%)',
-          filter: 'blur(120px)'
-        }}
-      />
-
-      {/* 2. Prominent Center-Right luminous turquoise spotlight */}
-      <div
-        className="absolute top-[18%] right-[10%] w-[680px] h-[680px] rounded-full pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle, rgba(20, 184, 166, 0.32) 0%, rgba(6, 182, 212, 0.16) 45%, transparent 70%)',
+          background: 'radial-gradient(circle at 55% 45%, rgba(20, 184, 166, 0.42) 0%, rgba(13, 148, 136, 0.26) 38%, rgba(6, 78, 90, 0.12) 60%, transparent 75%)',
           filter: 'blur(100px)'
         }}
       />
 
-      {/* 3. Subtle bottom-left teal glow */}
-      <div
-        className="absolute bottom-12 left-[8%] w-[420px] h-[420px] rounded-full pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle, rgba(14, 116, 144, 0.12) 0%, transparent 70%)',
-          filter: 'blur(120px)'
-        }}
-      />
-
-      {/* Top Navbar - Sticky top, permanent, matching Image 1 */}
-      <header className="h-[72px] px-6 sm:px-12 border-b border-white/[0.08] bg-[#080e15]/85 backdrop-blur-xl flex items-center justify-between z-40 flex-shrink-0">
+      {/* Top Navbar - Sticky top, permanent, matching reference */}
+      <header className="h-[72px] px-6 sm:px-12 border-b border-white/[0.07] bg-[#080e15]/85 backdrop-blur-xl flex items-center justify-between z-40 flex-shrink-0">
         {/* Left: Lotus logo + Horizon Clinic */}
         <div className="flex items-center gap-3">
           <LotusIcon className="w-6 h-6 text-slate-400 opacity-90" />
           <span className="font-medium text-slate-200 text-lg tracking-tight">Horizon Clinic</span>
-        </div>
-
-        {/* Center: Glowing Queue status pill */}
-        <div className="relative hidden sm:inline-flex items-center justify-center">
-          <div className="absolute -inset-1.5 bg-emerald-500/25 blur-lg rounded-full pointer-events-none" />
-          <div className="relative inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-[#121c27]/90 border border-white/10 text-xs sm:text-sm text-slate-200 backdrop-blur-md shadow-[0_0_18px_rgba(16,185,129,0.25)]">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_10px_#34d399] animate-pulse" />
-            <span className="font-normal text-slate-300">Waiting Room • Active in queue</span>
-          </div>
         </div>
 
         {/* Right: Exit Room Button */}

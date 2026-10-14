@@ -44,6 +44,12 @@ jobs:
           npm ci
           npm run build
 
+      - name: Install & Build Admin
+        working-directory: ./admin
+        run: |
+          npm ci
+          npm run build
+
   # ----------------------------------------------------
   # STEP 2: AUTOMATIC DEPLOYMENT TO AWS EC2
   # ----------------------------------------------------

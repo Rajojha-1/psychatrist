@@ -21,15 +21,23 @@ export default function MessageBubble({ message, isTyping = false }) {
       <div className="flex flex-col items-start w-full">
         <span className="text-xs text-slate-400 font-normal ml-14 mb-1.5">AI Companion</span>
         <div className="flex items-start gap-3.5">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#3b343a] via-[#28323c] to-[#1c2732] border border-amber-200/40 flex items-center justify-center flex-shrink-0 shadow-[0_0_14px_rgba(251,191,36,0.22)] text-amber-200">
-            <LotusIcon className="w-5 h-5 opacity-90 text-amber-100" />
+          <div
+            className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+            style={{
+              background: 'linear-gradient(135deg, #fecdd3 0%, #fed7aa 25%, #fca5a5 50%, #93c5fd 82%, #67e8f9 100%)',
+              boxShadow: '0 0 16px rgba(251, 146, 60, 0.35), 0 0 10px rgba(56, 189, 248, 0.25)',
+              border: '1px solid rgba(255, 255, 255, 0.3)'
+            }}
+          >
+            <LotusIcon className="w-5 h-5 text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]" />
           </div>
           <div
             className="flex items-center gap-2 px-6 py-4 rounded-2xl rounded-tl-sm"
             style={{
-              background: 'rgba(22, 34, 47, 0.85)',
+              background: 'rgba(28, 42, 54, 0.75)',
               backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255, 255, 255, 0.08)'
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)'
             }}
           >
             <span className="w-2 h-2 rounded-full bg-slate-400 animate-pulse" />
@@ -48,9 +56,11 @@ export default function MessageBubble({ message, isTyping = false }) {
       <div className="flex flex-col items-end w-full animate-fadeIn">
         <span className="text-xs text-slate-400 font-normal mr-1 mb-1.5">Patient</span>
         <div
-          className="max-w-[560px] px-6 py-4 rounded-2xl rounded-tr-sm text-[#091b1d] font-medium text-[15px] leading-relaxed break-words shadow-[0_6px_30px_rgba(45,212,191,0.35)]"
+          className="max-w-[560px] px-6 py-4 rounded-2xl rounded-tr-sm text-[#0c2024] font-normal text-[15px] leading-relaxed break-words"
           style={{
-            background: 'linear-gradient(100deg, #42e8d0 0%, #7ee7fc 100%)'
+            background: 'linear-gradient(90deg, #44e8d3 0%, #46dfcf 36%, #55a3ab 66%, rgba(76, 102, 116, 0.82) 100%)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            boxShadow: '0 4px 20px rgba(34, 211, 238, 0.16)'
           }}
         >
           {message.content}
@@ -63,16 +73,24 @@ export default function MessageBubble({ message, isTyping = false }) {
     <div className="flex flex-col items-start w-full animate-fadeIn">
       <span className="text-xs text-slate-400 font-normal ml-14 mb-1.5">AI Companion</span>
       <div className="flex items-start gap-3.5">
-        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#3b343a] via-[#28323c] to-[#1c2732] border border-amber-200/40 flex items-center justify-center flex-shrink-0 shadow-[0_0_14px_rgba(251,191,36,0.22)] text-amber-200">
-          <LotusIcon className="w-5 h-5 opacity-90 text-amber-100" />
+        <div
+          className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+          style={{
+            background: 'linear-gradient(135deg, #fecdd3 0%, #fed7aa 25%, #fca5a5 50%, #93c5fd 82%, #67e8f9 100%)',
+            boxShadow: '0 0 16px rgba(251, 146, 60, 0.35), 0 0 10px rgba(56, 189, 248, 0.25)',
+            border: '1px solid rgba(255, 255, 255, 0.3)'
+          }}
+        >
+          <LotusIcon className="w-5 h-5 text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]" />
         </div>
 
         <div
-          className="max-w-[580px] px-6 py-4 rounded-2xl rounded-tl-sm text-slate-200 text-[15px] leading-relaxed break-words shadow-lg"
+          className="max-w-[580px] px-6 py-4 rounded-2xl rounded-tl-sm text-slate-200 text-[15px] leading-relaxed break-words"
           style={{
-            background: 'rgba(22, 34, 47, 0.85)',
+            background: 'rgba(28, 42, 54, 0.75)',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.08)'
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)'
           }}
         >
           {message.content}

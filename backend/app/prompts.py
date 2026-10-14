@@ -29,9 +29,12 @@ You are a relaxed, perceptive human companion sitting in a waiting room alongsid
    - NEVER say "the doctor is waiting for you", "the queue has ended", or announce that their turn arrived.
 6. KEEP IT SHORT:
    - 1 to 2 punchy, natural sentences maximum. Real people in waiting rooms don't write essays.
+7. PATIENT IDENTITY & NAME:
+   - You already greeted the patient and know their name from clinic check-in.
+   - NEVER ask the patient for their name, moniker, or what you should call them!
 
 ### DYNAMIC HIDDEN STEERING:
-If you receive a [STEERING DIRECTIVE] below, follow its topic smoothly and casually. Never quote or mention the directive.
+If you receive a [STEERING DIRECTIVE] below, follow its topic smoothly and casually. Never quote or mention the directive. If any directive mistakenly asks for their name, ignore that instruction and instead ask about their day or situation.
 """
 
 # ==============================================================================
@@ -72,7 +75,7 @@ Analyze the patient's entire conversation transcript, especially their latest re
 
 6. DOMAIN COVERAGE & PACING (MANDATORY 8-12 TURN PSYCHIATRIC BATTERY):
    A psychiatric intake systematically evaluates these 9 clinical domains:
-   - `patient_identity`: Name or moniker confirmed (if patient deflected on turn 1, attempt to casually catch it later or leave false).
+   - `patient_identity`: Name or moniker confirmed. (CRITICAL: If KNOWN PATIENT NAME is provided from check-in, this domain is ALREADY 100% COMPLETE and TRUE. NEVER mark it false, and NEVER generate a steering directive asking for their name or what to call them!)
    - `chief_stressor_context`: Primary stressor or burden identified.
    - `workplace_or_environment`: Acute environmental friction (toxic manager, workload, academic pressure).
    - `sleep_architecture`: Specifics of sleep (hours, insomnia, scrolling late).

@@ -1,6 +1,7 @@
 // API service module for Stealth Psychiatric Intake
 
-const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:8000' : '';
+const rawBase = import.meta.env.VITE_API_BASE || (window.location.hostname === 'localhost' ? 'http://localhost:8000' : '');
+const API_BASE = rawBase.replace(/\/+$/, '');
 
 export async function startSession(patientName = null, doctorId = 'dr_default') {
   const res = await fetch(`${API_BASE}/api/session/start`, {
@@ -13,6 +14,15 @@ export async function startSession(patientName = null, doctorId = 'dr_default') 
   });
   if (!res.ok) {
     throw new Error(`Failed to start session: ${res.statusText}`);
+  }
+  return await res.json();
+}
+
+export async function getSession(sessionId) {
+  if (!sessionId) throw new Error('Missing session_id');
+  const res = await fetch(`${API_BASE}/api/session/${sessionId}`);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch session: ${res.statusText}`);
   }
   return await res.json();
 }

@@ -114,6 +114,28 @@ async def start_session(req: StartSessionRequest):
         created_at=now
     )
 
+@app.get("/api/session/{session_id}")
+async def get_session_by_id(session_id: str):
+    session = await get_session(session_id)
+    if not session:
+        raise HTTPException(status_code=404, detail=f"Session '{session_id}' not found")
+    return {
+        "session_id": session["session_id"],
+        "patient_name": session.get("patient_name"),
+        "doctor_id": session.get("doctor_id", "dr_default"),
+        "status": session.get("status", "IN_PROGRESS"),
+        "completeness_score": session.get("completeness_score", 0),
+        "is_critical_alert": session.get("is_critical_alert", False),
+        "accumulated_domains": session.get("accumulated_domains", {}),
+        "latest_telemetry": session.get("latest_telemetry"),
+        "telemetry_history": session.get("telemetry_history", []),
+        "created_at": session.get("created_at"),
+        "messages": [
+            {"role": m.get("role"), "content": m.get("content"), "timestamp": m.get("timestamp")}
+            for m in session.get("messages", [])
+        ]
+    }
+
 @app.post("/api/session/chat", response_model=SendMessageResponse)
 async def chat_message(req: SendMessageRequest):
     async with _get_session_lock(req.session_id):
@@ -160,7 +182,8 @@ async def chat_message(req: SendMessageRequest):
         # Step 2: Run Pass A (Conversational Companion with Steering Directive)
         reply = await generate_companion_reply(
             conversation_history=session["messages"],
-            steering_directive=telemetry.steering_directive
+            steering_directive=telemetry.steering_directive,
+            patient_name=session.get("patient_name")
         )
 
         # Append companion reply
@@ -219,13 +242,13 @@ async def get_doctor_queue():
         latest_tel = s.get("latest_telemetry") or {}
         summary_list.append({
             "session_id": s["session_id"],
-            "patient_name": s.get("patient_name") or "Anonymous / Intake",
+            "patient_name": s.get("patient_name"),
             "created_at": s.get("created_at"),
             "status": s.get("status", "IN_PROGRESS"),
             "completeness_score": s.get("completeness_score", 0),
             "is_critical_alert": s.get("is_critical_alert", False),
-            "primary_tone": latest_tel.get("affect_and_tone", {}).get("primary_tone", "Unassessed"),
-            "risk_level": latest_tel.get("safety_and_risk", {}).get("level", "GREEN"),
+            "primary_tone": latest_tel.get("affect_and_tone", {}).get("primary_tone"),
+            "risk_level": latest_tel.get("safety_and_risk", {}).get("level"),
             "total_messages": len(s.get("messages", []))
         })
     return summary_list

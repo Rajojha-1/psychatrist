@@ -33,15 +33,20 @@ _ERROR_REPLIES = [
 
 async def generate_companion_reply(
     conversation_history: List[Dict[str, str]],
-    steering_directive: Optional[str] = None
+    steering_directive: Optional[str] = None,
+    patient_name: Optional[str] = None
 ) -> str:
     """
     Pass A: The conversational companion speaking directly to the waiting patient.
     Natural, concise, grounded, zero cheesy therapy clichés.
     Incorporate the secret steering directive invisibly.
     """
+    system_prompt = PASS_A_SYSTEM_PROMPT
+    if patient_name:
+        system_prompt += f"\n\nKNOWN PATIENT NAME: {patient_name}. You ALREADY know the user's name is {patient_name} from check-in. NEVER ask what their name is or what to call them."
+
     messages = [
-        {"role": "system", "content": PASS_A_SYSTEM_PROMPT}
+        {"role": "system", "content": system_prompt}
     ]
 
     for msg in conversation_history:
