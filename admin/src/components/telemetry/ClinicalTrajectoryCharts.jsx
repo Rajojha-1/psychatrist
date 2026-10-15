@@ -8,7 +8,8 @@ import {
   Shield,
   Layers,
   Sparkles,
-  Info
+  Info,
+  X
 } from 'lucide-react';
 
 export default function ClinicalTrajectoryCharts({
@@ -17,6 +18,7 @@ export default function ClinicalTrajectoryCharts({
   session = {}
 }) {
   const [activeTooltip, setActiveTooltip] = useState(null);
+  const [pinnedTurn, setPinnedTurn] = useState(null);
   const [activeMetric, setActiveMetric] = useState('all'); // 'all' | 'valence' | 'arousal' | 'selfFocus'
 
   // Build clean history array (fallback to current telemetry if history is single)
@@ -172,7 +174,15 @@ export default function ClinicalTrajectoryCharts({
           </div>
 
           {/* Circumplex SVG Plot */}
-          <div className="relative flex justify-center py-2">
+          <div
+            className="relative flex justify-center py-2"
+            onClick={() => {
+              if (pinnedTurn) {
+                setPinnedTurn(null);
+                setActiveTooltip(null);
+              }
+            }}
+          >
             <svg
               viewBox={`0 0 ${width} ${height}`}
               className="w-full max-w-[360px] h-auto overflow-visible select-none"
@@ -269,6 +279,8 @@ export default function ClinicalTrajectoryCharts({
               {points.map((pt, idx) => {
                 const isLatest = idx === points.length - 1;
                 const isFirst = idx === 0;
+                const isHovered = activeTooltip?.turn === pt.turn;
+                const isPinned = pinnedTurn === pt.turn;
                 const ptColor = pt.risk === 'RED_CRITICAL' || pt.risk === 'RED'
                   ? '#f43f5e'
                   : pt.valence < -0.3
@@ -278,10 +290,48 @@ export default function ClinicalTrajectoryCharts({
                 return (
                   <g
                     key={idx}
-                    className="cursor-pointer transition-transform hover:scale-125"
-                    onMouseEnter={() => setActiveTooltip(pt)}
-                    onMouseLeave={() => setActiveTooltip(null)}
+                    className="cursor-pointer"
+                    onMouseEnter={() => {
+                      if (!pinnedTurn) setActiveTooltip(pt);
+                    }}
+                    onMouseLeave={() => {
+                      if (!pinnedTurn) setActiveTooltip(null);
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (pinnedTurn === pt.turn) {
+                        setPinnedTurn(null);
+                        setActiveTooltip(null);
+                      } else {
+                        setPinnedTurn(pt.turn);
+                        setActiveTooltip(pt);
+                      }
+                    }}
                   >
+                    {/* Generous invisible hit target (32px diameter) - fixed geometry eliminates hover loops */}
+                    <circle
+                      cx={pt.x}
+                      cy={pt.y}
+                      r="16"
+                      fill="transparent"
+                      pointerEvents="all"
+                    />
+
+                    {/* Outer glow halo ring when hovered or pinned */}
+                    {(isHovered || isPinned) && (
+                      <circle
+                        cx={pt.x}
+                        cy={pt.y}
+                        r={isLatest ? 14 : 11}
+                        fill={ptColor}
+                        fillOpacity="0.22"
+                        stroke={ptColor}
+                        strokeWidth="1.5"
+                        strokeDasharray={isPinned ? 'none' : '3 2'}
+                        pointerEvents="none"
+                      />
+                    )}
+
                     {/* Pulsing ring on latest turn */}
                     {isLatest && (
                       <circle
@@ -291,24 +341,33 @@ export default function ClinicalTrajectoryCharts({
                         fill="none"
                         stroke={ptColor}
                         strokeWidth="1.5"
-                        className="animate-ping opacity-60"
+                        pointerEvents="none"
+                        className="animate-ping opacity-60 pointer-events-none"
                       />
                     )}
+
+                    {/* Visible Marker Circle with smooth radius change */}
                     <circle
                       cx={pt.x}
                       cy={pt.y}
-                      r={isLatest ? 7 : isFirst ? 5 : 4}
-                      fill={isLatest ? ptColor : '#0f172a'}
-                      stroke={ptColor}
-                      strokeWidth={isLatest ? 2.5 : 2}
+                      r={(isHovered || isPinned) ? (isLatest ? 8.5 : 6.5) : (isLatest ? 7 : isFirst ? 5 : 4)}
+                      fill={isLatest || isHovered || isPinned ? ptColor : '#0f172a'}
+                      stroke={(isHovered || isPinned) ? '#ffffff' : ptColor}
+                      strokeWidth={(isHovered || isPinned) ? 2.5 : (isLatest ? 2.5 : 2)}
+                      pointerEvents="none"
+                      className="transition-all duration-150"
                     />
+
+                    {/* Turn Label */}
                     <text
                       x={pt.x}
-                      y={pt.y - 8}
+                      y={pt.y - ((isHovered || isPinned) ? 10 : 8)}
                       textAnchor="middle"
-                      fill={isLatest ? '#f8fafc' : '#94a3b8'}
-                      fontSize={isLatest ? '9' : '8'}
-                      fontWeight="bold"
+                      fill={isLatest || isHovered || isPinned ? '#f8fafc' : '#94a3b8'}
+                      fontSize={isLatest || isHovered || isPinned ? '9' : '8'}
+                      fontWeight={isLatest || isHovered || isPinned ? 'bold' : 'normal'}
+                      pointerEvents="none"
+                      className="transition-all duration-150"
                     >
                       T{pt.turn}
                     </text>
@@ -317,23 +376,50 @@ export default function ClinicalTrajectoryCharts({
               })}
             </svg>
 
-            {/* Hover Tooltip Overlay */}
+            {/* Hover / Pinned Tooltip Overlay - automatically docks opposite to the point */}
             {activeTooltip && (
               <div
-                className="absolute z-20 pointer-events-none p-2.5 rounded-xl bg-slate-900/95 border border-white/20 shadow-xl text-left text-xs"
+                className={`absolute z-20 p-2.5 rounded-xl bg-slate-900/95 border shadow-2xl text-left text-xs backdrop-blur-md transition-all duration-200 ${
+                  pinnedTurn === activeTooltip.turn
+                    ? 'border-teal-400/50 ring-1 ring-teal-400/30 pointer-events-auto'
+                    : 'border-white/20 pointer-events-none'
+                }`}
                 style={{
                   top: '12px',
-                  right: '12px',
-                  minWidth: '170px'
+                  ...(activeTooltip.x > width / 2 ? { left: '12px' } : { right: '12px' }),
+                  minWidth: '180px',
+                  maxWidth: '220px'
                 }}
               >
                 <div className="font-bold text-teal-300 flex justify-between items-center border-b border-white/10 pb-1 mb-1.5">
-                  <span>Turn {activeTooltip.turn}</span>
-                  <span className={`text-[10px] px-1.5 py-0.2 rounded ${
-                    activeTooltip.risk.includes('RED') ? 'bg-rose-500/30 text-rose-300' : 'bg-slate-800 text-slate-300'
-                  }`}>
-                    {activeTooltip.risk}
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span>Turn {activeTooltip.turn}</span>
+                    {pinnedTurn === activeTooltip.turn && (
+                      <span className="text-[9px] px-1 py-0.2 bg-teal-500/20 text-teal-300 rounded font-normal">
+                        pinned
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span className={`text-[10px] px-1.5 py-0.2 rounded ${
+                      activeTooltip.risk.includes('RED') ? 'bg-rose-500/30 text-rose-300' : 'bg-slate-800 text-slate-300'
+                    }`}>
+                      {activeTooltip.risk}
+                    </span>
+                    {pinnedTurn === activeTooltip.turn && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setPinnedTurn(null);
+                          setActiveTooltip(null);
+                        }}
+                        className="text-slate-400 hover:text-white p-0.5 rounded hover:bg-white/10 transition"
+                        title="Dismiss"
+                      >
+                        <X size={12} />
+                      </button>
+                    )}
+                  </div>
                 </div>
                 <div className="text-[11px] text-slate-300 space-y-0.5">
                   <div>Affect: <strong>{activeTooltip.tone}</strong></div>
@@ -351,6 +437,7 @@ export default function ClinicalTrajectoryCharts({
 
           <div className="flex justify-between items-center text-[10px] text-slate-500 pt-2 border-t border-white/5">
             <span>● T1: Intake Start</span>
+            <span className="text-slate-400">Hover or click turn to inspect</span>
             <span className="text-teal-400 font-medium">● Latest: T{points.length} ({points[points.length - 1].tone})</span>
           </div>
         </div>
@@ -454,11 +541,80 @@ export default function ClinicalTrajectoryCharts({
                 {points.map((pt, i) => {
                   const x = getTimelineX(i);
                   const isLatest = i === points.length - 1;
+                  const isHovered = activeTooltip?.turn === pt.turn;
+                  const isPinned = pinnedTurn === pt.turn;
+                  const yValence = tPadY + (1 - (pt.valence + 1) / 2) * tPlotH;
+                  const yArousal = tPadY + (1 - Math.max(0, Math.min(1, pt.arousal))) * tPlotH;
+                  const ySelfFocus = tPadY + (1 - Math.max(0, Math.min(1, history[i]?.linguistic_analysis?.pronoun_density_self_focus ?? 0.3))) * tPlotH;
+
                   return (
-                    <g key={i} className="cursor-pointer" onClick={() => setActiveTooltip(pt)}>
-                      <line x1={x} y1={tPadY} x2={x} y2={tPadY + tPlotH} stroke="rgba(255,255,255,0.08)" strokeDasharray="2 2" />
-                      <circle cx={x} cy={tPadY + tPlotH} r="2" fill="#64748b" />
-                      <text x={x} y={tPadY + tPlotH + 14} textAnchor="middle" fill={isLatest ? '#2dd4bf' : '#64748b'} fontSize="8" fontWeight={isLatest ? 'bold' : 'normal'}>
+                    <g
+                      key={i}
+                      className="cursor-pointer"
+                      onMouseEnter={() => {
+                        if (!pinnedTurn) setActiveTooltip(pt);
+                      }}
+                      onMouseLeave={() => {
+                        if (!pinnedTurn) setActiveTooltip(null);
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (pinnedTurn === pt.turn) {
+                          setPinnedTurn(null);
+                          setActiveTooltip(null);
+                        } else {
+                          setPinnedTurn(pt.turn);
+                          setActiveTooltip(pt);
+                        }
+                      }}
+                    >
+                      {/* Generous invisible column hit target */}
+                      <rect
+                        x={x - 14}
+                        y={tPadY}
+                        width="28"
+                        height={tPlotH + 24}
+                        fill="transparent"
+                        pointerEvents="all"
+                      />
+
+                      {/* Vertical Guideline */}
+                      <line
+                        x1={x}
+                        y1={tPadY}
+                        x2={x}
+                        y2={tPadY + tPlotH}
+                        stroke={isHovered || isPinned ? 'rgba(45,212,191,0.5)' : 'rgba(255,255,255,0.08)'}
+                        strokeWidth={isHovered || isPinned ? '1.5' : '1'}
+                        strokeDasharray={isHovered || isPinned ? 'none' : '2 2'}
+                        pointerEvents="none"
+                      />
+
+                      {/* Highlight dots on streams when hovered/pinned */}
+                      {(isHovered || isPinned) && (
+                        <>
+                          {(activeMetric === 'all' || activeMetric === 'valence') && (
+                            <circle cx={x} cy={yValence} r="4.5" fill="#2dd4bf" stroke="#ffffff" strokeWidth="1.5" pointerEvents="none" />
+                          )}
+                          {(activeMetric === 'all' || activeMetric === 'arousal') && (
+                            <circle cx={x} cy={yArousal} r="4.5" fill="#f59e0b" stroke="#ffffff" strokeWidth="1.5" pointerEvents="none" />
+                          )}
+                          {(activeMetric === 'all' || activeMetric === 'selfFocus') && (
+                            <circle cx={x} cy={ySelfFocus} r="4.5" fill="#a855f7" stroke="#ffffff" strokeWidth="1.5" pointerEvents="none" />
+                          )}
+                        </>
+                      )}
+
+                      <circle cx={x} cy={tPadY + tPlotH} r={isHovered || isPinned ? '3.5' : '2'} fill={isHovered || isPinned ? '#2dd4bf' : '#64748b'} pointerEvents="none" />
+                      <text
+                        x={x}
+                        y={tPadY + tPlotH + 14}
+                        textAnchor="middle"
+                        fill={isHovered || isPinned ? '#2dd4bf' : (isLatest ? '#f8fafc' : '#64748b')}
+                        fontSize="8"
+                        fontWeight={isHovered || isPinned || isLatest ? 'bold' : 'normal'}
+                        pointerEvents="none"
+                      >
                         T{pt.turn}
                       </text>
                     </g>
@@ -483,7 +639,7 @@ export default function ClinicalTrajectoryCharts({
                   <span className="text-slate-300 font-medium">Self-Focus Pronouns</span>
                 </span>
               </div>
-              <span className="text-[10px] text-slate-500 italic">Click turn to inspect</span>
+              <span className="text-[10px] text-slate-400">Hover or click turn to inspect</span>
             </div>
           </div>
 
