@@ -199,7 +199,6 @@ export default function App() {
         onCheckIn={handleCheckIn}
         loading={loadingInit}
         error={initError}
-        onDoctorAccess={handleSwitchToDoctor}
       />
     );
   }

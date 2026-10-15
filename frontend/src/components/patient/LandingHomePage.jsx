@@ -11,7 +11,7 @@ import {
   Check
 } from 'lucide-react';
 
-export default function LandingHomePage({ onCheckIn, loading, error, onDoctorAccess }) {
+export default function LandingHomePage({ onCheckIn, loading, error }) {
   const [tab, setTab] = useState('checkin'); // 'checkin' | 'why' | 'about'
   const [name, setName] = useState('');
   const inputRef = useRef(null);
@@ -93,20 +93,6 @@ export default function LandingHomePage({ onCheckIn, loading, error, onDoctorAcc
           >
             About
           </button>
-        </div>
-
-        {/* Doctor portal discreet link */}
-        <div className="hidden sm:block">
-          {onDoctorAccess ? (
-            <button
-              onClick={onDoctorAccess}
-              className="text-xs text-slate-400 hover:text-teal-300 transition-colors cursor-pointer"
-            >
-              Doctor Access →
-            </button>
-          ) : (
-            <div className="w-16" />
-          )}
         </div>
       </header>
 
@@ -314,11 +300,6 @@ export default function LandingHomePage({ onCheckIn, loading, error, onDoctorAcc
           <button onClick={() => setTab('about')} className="hover:text-slate-200 transition-colors cursor-pointer">
             About
           </button>
-          {onDoctorAccess && (
-            <button onClick={onDoctorAccess} className="text-slate-400 hover:text-teal-300 transition-colors cursor-pointer">
-              Clinician Portal
-            </button>
-          )}
         </div>
       </footer>
     </div>
