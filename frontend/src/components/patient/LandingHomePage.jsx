@@ -6,9 +6,16 @@ import {
   MessageSquare,
   Lock,
   Heart,
-  Award,
-  EyeOff
+  EyeOff,
+  Activity,
+  Search,
+  Bell,
+  MoreHorizontal
 } from 'lucide-react';
+
+import pillarWave from '../../assets/pillar_wave_clean.png';
+import pillarSophia from '../../assets/pillar_sophia_clean.png';
+import pillarMedal from '../../assets/pillar_medal_clean.png';
 
 export default function LandingHomePage({ onCheckIn, loading, error }) {
   const [name, setName] = useState('');
@@ -34,7 +41,7 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
     <div className="w-full bg-[#000000] text-zinc-100 font-sans selection:bg-white/20 selection:text-white select-none relative overflow-x-hidden">
       
       {/* =========================================================================
-          SCREEN 1: HERO SECTION (100vh, Higher & Taller Card, Exact Match to Picture)
+          SCREEN 1: HERO SECTION (100vh, Exact Match to Picture 1)
           ========================================================================= */}
       <section
         id="hero"
@@ -90,7 +97,7 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
             No 50-question clinical checklists. Chat naturally with Sophia, an empathetic<br className="hidden sm:inline" /> waiting room peer, while your doctor prepares your care.
           </p>
 
-          {/* Floating Dark Glass Console Window: Taller & Higher */}
+          {/* Floating Dark Glass Console Window */}
           <div className="relative w-full max-w-[700px]">
             {/* Luminous Ethereal Auras Hugging Left & Right of Card */}
             <div
@@ -108,7 +115,7 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
               }}
             />
 
-            {/* The Console Card: Taller with generous padding */}
+            {/* The Console Card */}
             <div
               className="w-full rounded-2xl border border-white/[0.12] p-7 sm:p-9 backdrop-blur-2xl transition-all duration-300 relative text-left"
               style={{
@@ -131,7 +138,7 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
                 <div className="w-8" />
               </div>
 
-              {/* Taller Glowing Waveform in Center */}
+              {/* Glowing Waveform in Center */}
               <div className="py-7 sm:py-9 flex items-center justify-center relative">
                 <svg viewBox="0 0 540 90" className="w-full h-22 sm:h-24 overflow-visible animate-wave-breathe">
                   <defs>
@@ -209,7 +216,7 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
 
 
       {/* =========================================================================
-          SCREEN 2: CLINICAL TRAJECTORY DASHBOARD (100vh)
+          SCREEN 2: CLINICAL TRAJECTORY DASHBOARD (100vh, 100% Vector Icons)
           ========================================================================= */}
       <section
         id="trajectory"
@@ -241,7 +248,7 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
           </p>
         </div>
 
-        {/* Main Dashboard Window: Fits 100vh cleanly */}
+        {/* Main Dashboard Window: ZERO Emojis, 100% Vector Icons */}
         <div
           className="relative z-10 w-full max-w-6xl rounded-2xl border border-white/[0.10] p-5 sm:p-6 backdrop-blur-2xl"
           style={{
@@ -249,20 +256,25 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
             boxShadow: '0 0 60px -10px rgba(99, 102, 241, 0.20), 0 0 60px -10px rgba(245, 158, 11, 0.16), 0 35px 90px -15px rgba(0, 0, 0, 0.98), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)'
           }}
         >
-          {/* Dashboard Header Bar */}
+          {/* Dashboard Header Bar: 100% Vector Icons */}
           <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/[0.08]">
             <div className="flex items-center gap-2.5">
-              <div className="w-5 h-5 rounded-md bg-white/10 flex items-center justify-center text-[10px]">
-                🌅
+              <div className="w-6 h-6 rounded-md bg-white/[0.08] border border-white/10 flex items-center justify-center text-white shadow-sm">
+                <Activity size={13} className="text-white" />
               </div>
               <span className="text-xs font-semibold text-white tracking-wide">Horizon Health</span>
             </div>
             <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900/90 border border-white/15 text-xs text-zinc-300">
-              <span>🔍 Dashboard</span>
+              <Search size={11} className="text-zinc-400" />
+              <span className="font-medium text-[11px]">Dashboard</span>
             </div>
-            <div className="flex items-center gap-2 text-zinc-400 text-xs">
-              <span>🔔</span>
-              <span>•••</span>
+            <div className="flex items-center gap-2.5 text-zinc-400">
+              <button type="button" className="p-1 hover:text-white transition-colors cursor-pointer">
+                <Bell size={13} />
+              </button>
+              <button type="button" className="p-1 hover:text-white transition-colors cursor-pointer">
+                <MoreHorizontal size={14} />
+              </button>
             </div>
           </div>
 
@@ -443,7 +455,7 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
 
 
       {/* =========================================================================
-          SCREEN 3: WHY HORIZON (100vh)
+          SCREEN 3: WHY HORIZON (100vh, Master 3-Pillar Graphics)
           ========================================================================= */}
       <section
         id="why"
@@ -475,9 +487,9 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
           </p>
         </div>
 
-        {/* 3 Obsidian Glass Cards */}
+        {/* 3 Obsidian Glass Cards with Master Graphics */}
         <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl">
-          {/* Card 1: De-escalate Anxiety */}
+          {/* Card 1: De-escalate Anxiety (3D Fluid Calm Wave) */}
           <div
             className="rounded-2xl border border-white/[0.12] p-7 sm:p-8 flex flex-col items-center text-center backdrop-blur-2xl transition-all duration-300 hover:border-cyan-500/50 hover:shadow-[0_0_35px_rgba(56,189,248,0.20)]"
             style={{
@@ -490,32 +502,11 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
             </h3>
 
             <div className="w-full h-24 flex items-center justify-center my-auto">
-              <svg viewBox="0 0 160 50" className="w-44 h-16 overflow-visible">
-                <defs>
-                  <linearGradient id="cardWaveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#38bdf8" />
-                    <stop offset="50%" stopColor="#818cf8" />
-                    <stop offset="100%" stopColor="#c084fc" />
-                  </linearGradient>
-                </defs>
-                <path
-                  d="M 10 25 C 40 25, 55 5, 80 25 C 105 45, 120 25, 150 25"
-                  fill="none"
-                  stroke="url(#cardWaveGrad)"
-                  strokeWidth="8"
-                  opacity="0.35"
-                  strokeLinecap="round"
-                  style={{ filter: 'blur(4px)' }}
-                />
-                <path
-                  d="M 10 25 C 40 25, 55 5, 80 25 C 105 45, 120 25, 150 25"
-                  fill="none"
-                  stroke="url(#cardWaveGrad)"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  style={{ filter: 'drop-shadow(0 0 10px rgba(56, 189, 248, 0.75))' }}
-                />
-              </svg>
+              <img
+                src={pillarWave}
+                alt="De-escalate Anxiety Fluid Wave"
+                className="w-48 h-auto object-contain mx-auto mix-blend-lighten filter drop-shadow-[0_0_15px_rgba(255,255,255,0.25)] select-none pointer-events-none"
+              />
             </div>
 
             <p className="text-xs text-zinc-400 leading-relaxed mt-5">
@@ -523,7 +514,7 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
             </p>
           </div>
 
-          {/* Card 2: A Peer, Not An Interrogator */}
+          {/* Card 2: A Peer, Not An Interrogator (Sophia Chat Bubble) */}
           <div
             className="rounded-2xl border border-white/[0.12] p-7 sm:p-8 flex flex-col items-center text-center backdrop-blur-2xl transition-all duration-300 hover:border-purple-500/50 hover:shadow-[0_0_35px_rgba(168,85,247,0.20)]"
             style={{
@@ -536,17 +527,11 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
             </h3>
 
             <div className="w-full h-24 flex items-center justify-center my-auto">
-              <div
-                className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-2xl border border-purple-500/40 text-xs text-zinc-100"
-                style={{
-                  background: 'rgba(24, 24, 34, 0.95)',
-                  boxShadow: '0 0 25px rgba(168, 85, 247, 0.30)'
-                }}
-              >
-                <div className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399] animate-pulse" />
-                <MessageSquare size={14} className="text-purple-300" />
-                <span className="font-semibold tracking-wide">Sophia</span>
-              </div>
+              <img
+                src={pillarSophia}
+                alt="Sophia Peer Support Bubble"
+                className="w-44 h-auto object-contain mx-auto mix-blend-lighten filter drop-shadow-[0_0_15px_rgba(255,255,255,0.20)] select-none pointer-events-none"
+              />
             </div>
 
             <p className="text-xs text-zinc-400 leading-relaxed mt-5">
@@ -554,7 +539,7 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
             </p>
           </div>
 
-          {/* Card 3: Doctor Walks In Aligned */}
+          {/* Card 3: Doctor Walks In Aligned (Clinical Readiness Seal Medal) */}
           <div
             className="rounded-2xl border border-white/[0.12] p-7 sm:p-8 flex flex-col items-center text-center backdrop-blur-2xl transition-all duration-300 hover:border-amber-500/50 hover:shadow-[0_0_35px_rgba(245,158,11,0.20)]"
             style={{
@@ -567,15 +552,11 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
             </h3>
 
             <div className="w-full h-24 flex items-center justify-center my-auto">
-              <div
-                className="w-13 h-13 rounded-full border border-amber-500/50 flex items-center justify-center text-amber-300"
-                style={{
-                  background: 'rgba(120, 53, 15, 0.25)',
-                  boxShadow: '0 0 25px rgba(245, 158, 11, 0.35)'
-                }}
-              >
-                <Award size={24} />
-              </div>
+              <img
+                src={pillarMedal}
+                alt="Clinical Readiness Medal"
+                className="w-20 h-auto object-contain mx-auto mix-blend-lighten filter drop-shadow-[0_0_15px_rgba(255,255,255,0.30)] select-none pointer-events-none"
+              />
             </div>
 
             <p className="text-xs text-zinc-400 leading-relaxed mt-5">
@@ -587,7 +568,7 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
 
 
       {/* =========================================================================
-          SCREEN 4: ABOUT & 24/7 CRISIS SAFETY (100vh)
+          SCREEN 4: ABOUT & 24/7 CRISIS SAFETY (100vh, High-Class Cards, ZERO Emojis)
           ========================================================================= */}
       <section
         id="about"
@@ -619,7 +600,7 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
           </p>
         </div>
 
-        {/* Centerpiece Console Window: Fits 100vh */}
+        {/* Centerpiece Console Window: Premium High-Class Cards */}
         <div
           className="relative z-10 w-full max-w-6xl rounded-2xl border border-white/[0.10] p-6 sm:p-8 backdrop-blur-2xl my-auto"
           style={{
@@ -627,49 +608,70 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
             boxShadow: '0 0 60px -10px rgba(99, 102, 241, 0.20), 0 0 60px -10px rgba(245, 158, 11, 0.18), 0 35px 90px -15px rgba(0, 0, 0, 0.98), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)'
           }}
         >
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-7 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
             {/* Left Column: Our Clinical Philosophy */}
-            <div className="md:col-span-7 text-left space-y-3.5">
+            <div className="md:col-span-7 text-left space-y-4">
               <div>
-                <h3 className="text-xl font-semibold text-white tracking-tight">
+                <h3 className="text-2xl font-bold text-white tracking-tight">
                   Our Clinical Philosophy
                 </h3>
                 <div
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-indigo-400/40 text-[10px] text-indigo-200 font-medium mt-1.5"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-indigo-400/40 text-[11px] text-indigo-200 font-medium mt-2"
                   style={{
                     background: 'rgba(99, 102, 241, 0.15)',
                     boxShadow: '0 0 15px rgba(99, 102, 241, 0.25)'
                   }}
                 >
-                  <Shield size={11} className="text-indigo-300" />
+                  <Shield size={12} className="text-indigo-300" />
                   <span>Patient privacy badge</span>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 pt-0.5">
-                <div className="w-8 h-8 rounded-lg bg-white/[0.08] border border-white/20 flex items-center justify-center text-white shadow-[0_0_15px_rgba(255,255,255,0.10)]">
-                  <EyeOff size={16} />
+              {/* Zero Advertising Access Tile */}
+              <div className="flex items-center gap-3.5 p-3.5 rounded-xl bg-white/[0.04] border border-white/10 shadow-inner">
+                <div className="w-10 h-10 rounded-lg bg-white/[0.08] border border-white/15 flex items-center justify-center text-white shadow-sm">
+                  <EyeOff size={18} />
                 </div>
-                <span className="text-base font-semibold text-white">
-                  Zero Advertising Access
-                </span>
+                <div>
+                  <div className="text-base font-semibold text-white">
+                    Zero Advertising Access
+                  </div>
+                  <div className="text-xs text-zinc-400">
+                    No marketing trackers, third-party data broker access, or commercial profiling.
+                  </div>
+                </div>
               </div>
 
-              <div className="space-y-1.5 text-xs text-zinc-400 pt-0.5">
-                <span className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider block">
+              {/* Empathetic intake values list with fine dividers */}
+              <div className="pt-1">
+                <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider block mb-2.5">
                   Empathetic intake values
                 </span>
-                <div className="flex items-center gap-2 text-zinc-200">
-                  <Heart size={14} className="text-rose-400 drop-shadow-[0_0_6px_rgba(244,63,94,0.6)]" />
-                  <span>Compassionate Onboarding</span>
-                </div>
-                <div className="flex items-center gap-2 text-zinc-200">
-                  <Heart size={14} className="text-rose-400 drop-shadow-[0_0_6px_rgba(244,63,94,0.6)]" />
-                  <span>Patient-Centric Approach</span>
-                </div>
-                <div className="flex items-center gap-2 text-zinc-200">
-                  <Lock size={14} className="text-emerald-400 drop-shadow-[0_0_6px_rgba(52,211,153,0.6)]" />
-                  <span>Confidential Care Path</span>
+                
+                <div className="space-y-2.5">
+                  <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
+                    <div className="flex items-center gap-2.5 text-zinc-200 text-xs font-medium">
+                      <Heart size={14} className="text-rose-400 drop-shadow-[0_0_6px_rgba(244,63,94,0.6)]" />
+                      <span>Compassionate Onboarding</span>
+                    </div>
+                    <span className="text-[10px] text-zinc-500 font-mono">CALM-FIRST</span>
+                  </div>
+
+                  <div className="flex items-center justify-between py-1.5 border-b border-white/[0.06]">
+                    <div className="flex items-center gap-2.5 text-zinc-200 text-xs font-medium">
+                      <Heart size={14} className="text-indigo-400 drop-shadow-[0_0_6px_rgba(129,140,248,0.6)]" />
+                      <span>Patient-Centric Approach</span>
+                    </div>
+                    <span className="text-[10px] text-zinc-500 font-mono">NON-CLINICAL</span>
+                  </div>
+
+                  <div className="flex items-center justify-between py-1.5">
+                    <div className="flex items-center gap-2.5 text-zinc-200 text-xs font-medium">
+                      <Lock size={14} className="text-emerald-400 drop-shadow-[0_0_6px_rgba(52,211,153,0.6)]" />
+                      <span>Confidential Care Path</span>
+                    </div>
+                    <span className="text-[10px] text-zinc-500 font-mono">ENCRYPTED</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -677,15 +679,16 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
             {/* Right Column: 24/7 Immediate Crisis Support (Glowing Amber Card) */}
             <div className="md:col-span-5">
               <div
-                className="rounded-2xl p-5 sm:p-6 flex flex-col items-center text-center relative overflow-hidden animate-pulse-glow-amber"
+                className="rounded-2xl p-6 flex flex-col items-center text-center relative overflow-hidden animate-pulse-glow-amber"
                 style={{
-                  border: '2px solid rgba(245, 158, 11, 0.85)',
-                  background: 'linear-gradient(135deg, rgba(234, 88, 12, 0.15) 0%, rgba(245, 158, 11, 0.08) 50%, rgba(15, 15, 20, 0.90) 100%)',
+                  border: '1.5px solid rgba(245, 158, 11, 0.75)',
+                  background: 'linear-gradient(135deg, rgba(234, 88, 12, 0.16) 0%, rgba(245, 158, 11, 0.08) 50%, rgba(15, 15, 20, 0.92) 100%)',
                   boxShadow: '0 0 45px rgba(245, 158, 11, 0.40), 0 0 90px rgba(234, 88, 12, 0.25), inset 0 0 25px rgba(245, 158, 11, 0.15)'
                 }}
               >
+                {/* Luminous Top Badge */}
                 <span
-                  className="px-3.5 py-1.5 rounded-full text-[11px] font-bold text-zinc-950 mb-2.5 tracking-wide"
+                  className="px-4 py-1.5 rounded-full text-[11px] font-bold text-zinc-950 mb-3 tracking-wide"
                   style={{
                     background: 'linear-gradient(90deg, #ea580c 0%, #f59e0b 100%)',
                     boxShadow: '0 0 20px rgba(245, 158, 11, 0.65)'
@@ -695,28 +698,28 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
                 </span>
 
                 <div
-                  className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white my-1"
+                  className="text-5xl sm:text-6xl font-extrabold tracking-tight text-white my-1"
                   style={{
                     textShadow: '0 0 20px rgba(255, 255, 255, 0.6), 0 0 35px rgba(245, 158, 11, 0.4)'
                   }}
                 >
                   988
                 </div>
-                <p className="text-xs font-medium text-amber-200/90 mb-4">
+                <p className="text-xs font-medium text-amber-200/90 mb-5">
                   Suicide & Crisis Lifeline
                 </p>
 
                 <div className="flex items-center gap-3 w-full">
                   <a
                     href="tel:988"
-                    className="flex-1 py-2 px-3 rounded-full border border-amber-500/50 hover:border-amber-400 bg-white/10 hover:bg-white/20 text-xs font-semibold text-white flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-[0_0_18px_rgba(245,158,11,0.25)] active:scale-95"
+                    className="flex-1 py-2.5 px-3 rounded-full border border-amber-500/50 hover:border-amber-400 bg-white/10 hover:bg-white/20 text-xs font-semibold text-white flex items-center justify-center gap-2 transition-all cursor-pointer shadow-[0_0_18px_rgba(245,158,11,0.25)] active:scale-95"
                   >
                     <Phone size={13} className="text-amber-300" />
                     <span>Call</span>
                   </a>
                   <a
                     href="sms:988"
-                    className="flex-1 py-2 px-3 rounded-full border border-amber-500/50 hover:border-amber-400 bg-white/10 hover:bg-white/20 text-xs font-semibold text-white flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-[0_0_18px_rgba(245,158,11,0.25)] active:scale-95"
+                    className="flex-1 py-2.5 px-3 rounded-full border border-amber-500/50 hover:border-amber-400 bg-white/10 hover:bg-white/20 text-xs font-semibold text-white flex items-center justify-center gap-2 transition-all cursor-pointer shadow-[0_0_18px_rgba(245,158,11,0.25)] active:scale-95"
                   >
                     <MessageSquare size={13} className="text-amber-300" />
                     <span>Text</span>
