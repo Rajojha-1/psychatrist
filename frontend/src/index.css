@@ -90,3 +90,31 @@ button {
 input, textarea {
   font-family: inherit;
 }
+
+@keyframes waveBreathe {
+  0%, 100% {
+    transform: scaleY(0.92) translateY(0);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scaleY(1.08) translateY(-2px);
+    opacity: 1;
+  }
+}
+
+.animate-wave-breathe {
+  animation: waveBreathe 5s ease-in-out infinite;
+}
+
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-float {
+  animation: floatGentle 6s ease-in-out infinite;
+}
