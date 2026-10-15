@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import CheckInCard from './components/patient/CheckInCard';
+import LandingHomePage from './components/patient/LandingHomePage';
 import WaitingRoomChat from './components/patient/WaitingRoomChat';
 import DoctorPortal from './components/doctor/DoctorPortal';
 import { startSession, sendChatMessage, getSession } from './services/api';
@@ -195,10 +195,11 @@ export default function App() {
   // Patient Facing Screens (Strictly zero doctor portal access)
   if (patientScreen === 'checkin') {
     return (
-      <CheckInCard
+      <LandingHomePage
         onCheckIn={handleCheckIn}
         loading={loadingInit}
         error={initError}
+        onDoctorAccess={handleSwitchToDoctor}
       />
     );
   }
