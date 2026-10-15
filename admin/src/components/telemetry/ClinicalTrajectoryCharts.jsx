@@ -5,6 +5,7 @@ import {
   TrendingUp,
   Compass,
   AlertTriangle,
+  CheckCircle2,
   Shield,
   Layers,
   Sparkles,
@@ -693,11 +694,19 @@ export default function ClinicalTrajectoryCharts({
                 </div>
               </div>
 
-              <p className="text-[10px] text-slate-400 pt-1 leading-relaxed">
-                {isDecompensating
-                  ? '⚠️ Clinical Warning: Current environmental stressors and workplace/social strain heavily outweigh identified protective anchors. Prioritize safety and immediate grounding during consultation.'
-                  : '✓ Patient demonstrates intact help-seeking motivation and reflective capacity to anchor therapeutic exploration.'}
-              </p>
+              <div className="text-[10px] text-slate-400 pt-1 leading-relaxed flex items-start gap-1.5">
+                {isDecompensating ? (
+                  <>
+                    <AlertTriangle size={12} className="text-amber-400 flex-shrink-0 mt-0.5" />
+                    <span>Clinical Warning: Current environmental stressors and workplace/social strain heavily outweigh identified protective anchors. Prioritize safety and immediate grounding during consultation.</span>
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2 size={12} className="text-teal-400 flex-shrink-0 mt-0.5" />
+                    <span>Patient demonstrates intact help-seeking motivation and reflective capacity to anchor therapeutic exploration.</span>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </div>
