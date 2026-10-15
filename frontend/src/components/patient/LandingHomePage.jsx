@@ -1,17 +1,12 @@
 import React, { useState, useRef } from 'react';
 import {
-  ArrowRight,
-  HeartPulse,
-  Clock,
   Shield,
-  Sparkles,
   AlertCircle,
   Phone,
   MessageSquare,
   Lock,
   Heart,
   Award,
-  ChevronDown,
   EyeOff
 } from 'lucide-react';
 
@@ -36,168 +31,180 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
   };
 
   return (
-    <div className="w-full bg-[#000000] text-zinc-100 font-sans selection:bg-white/20 selection:text-white select-none relative">
+    <div className="w-full bg-[#000000] text-zinc-100 font-sans selection:bg-white/20 selection:text-white select-none relative overflow-x-hidden">
       
       {/* =========================================================================
-          SCREEN 1: HERO SECTION (Waiting Lounge Console - Matching Picture 1)
+          SCREEN 1: HERO SECTION (Exact Match to Picture 1)
           ========================================================================= */}
       <section
         id="hero"
-        className="min-h-screen h-screen w-full relative flex flex-col justify-between items-center px-4 sm:px-8 py-6 overflow-hidden snap-start"
+        className="min-h-screen h-screen w-full relative flex flex-col justify-between items-center px-4 sm:px-6 py-5 overflow-hidden snap-start"
       >
-        {/* Luminous Ethereal Auras: Deep Indigo/Violet (Left) & Warm Amber (Right) */}
-        <div
-          className="absolute top-1/2 -translate-y-1/2 left-[-10%] sm:left-[2%] w-[480px] sm:w-[680px] h-[480px] sm:h-[620px] rounded-full pointer-events-none z-0"
-          style={{
-            background: 'radial-gradient(circle at 45% 45%, rgba(99, 102, 241, 0.48) 0%, rgba(124, 58, 237, 0.26) 42%, rgba(67, 56, 202, 0.08) 72%, transparent 88%)',
-            filter: 'blur(75px)'
-          }}
-        />
-        <div
-          className="absolute top-1/2 -translate-y-1/2 right-[-10%] sm:right-[2%] w-[460px] sm:w-[650px] h-[460px] sm:h-[600px] rounded-full pointer-events-none z-0"
-          style={{
-            background: 'radial-gradient(circle at 55% 45%, rgba(245, 158, 11, 0.40) 0%, rgba(234, 88, 12, 0.22) 42%, rgba(180, 83, 9, 0.06) 72%, transparent 88%)',
-            filter: 'blur(75px)'
-          }}
-        />
-
-        {/* Top Navbar */}
-        <header className="relative z-20 w-full max-w-5xl mx-auto flex items-center justify-between pt-2">
-          {/* Brand Logo */}
+        {/* Top Navbar: Spans widely with small side margins */}
+        <header className="relative z-20 w-full px-4 sm:px-8 flex items-center justify-between pt-1">
+          {/* Brand Logo matching Picture */}
           <a href="#hero" className="flex items-center gap-2.5 group">
-            <div className="w-7 h-7 rounded-lg bg-white/[0.08] border border-white/15 flex items-center justify-center text-white shadow-[0_0_20px_rgba(255,255,255,0.12)] group-hover:scale-105 transition-transform">
-              <HeartPulse size={15} />
-            </div>
-            <span className="text-sm font-semibold tracking-tight text-white">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="group-hover:scale-105 transition-transform">
+              <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12" stroke="white" strokeWidth="2.2" strokeLinecap="round" />
+              <path d="M7 12C7 9.24 9.24 7 12 7C14.76 7 17 9.24 17 12" stroke="white" strokeWidth="2.2" strokeLinecap="round" />
+            </svg>
+            <span className="text-base font-semibold tracking-tight text-white">
               Horizon
             </span>
           </a>
 
           {/* Nav Links */}
-          <nav className="hidden md:flex items-center gap-8 text-xs font-medium text-zinc-400">
+          <nav className="hidden md:flex items-center gap-8 text-xs font-medium text-zinc-300">
             <a href="#hero" className="hover:text-white transition-colors">Lounge</a>
             <a href="#why" className="hover:text-white transition-colors">Why Horizon</a>
             <a href="#trajectory" className="hover:text-white transition-colors">Clinical Engine</a>
             <a href="#about" className="hover:text-white transition-colors">About</a>
           </nav>
 
-          {/* Top Right Action Button */}
-          <button
-            onClick={scrollToInput}
-            className="px-4 py-1.5 rounded-full text-xs font-semibold bg-white text-black hover:bg-zinc-200 transition-all active:scale-95 shadow-[0_0_22px_rgba(255,255,255,0.30)] cursor-pointer"
-          >
-            Enter Lounge
-          </button>
+          {/* Top Right Action Buttons (Log in + Enter Lounge) */}
+          <div className="flex items-center gap-5">
+            <button
+              onClick={scrollToInput}
+              className="hidden sm:inline-block text-xs font-medium text-zinc-400 hover:text-white transition-colors cursor-pointer"
+            >
+              Log in
+            </button>
+            <button
+              onClick={scrollToInput}
+              className="px-4 py-1.5 rounded-full text-xs font-semibold bg-white text-black hover:bg-zinc-200 transition-all active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.25)] cursor-pointer"
+            >
+              Enter Lounge
+            </button>
+          </div>
         </header>
 
-        {/* Hero Centerpiece: Headline & Floating Console Window */}
-        <div className="relative z-10 w-full max-w-2xl mx-auto my-auto flex flex-col items-center text-center py-4">
-          <h1 className="text-4xl sm:text-5xl md:text-[3.5rem] font-semibold tracking-tight text-white leading-[1.14] mb-4 drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
+        {/* Hero Centerpiece: 1-Line Big Heading + Subtext + Card */}
+        <div className="relative z-10 w-full flex flex-col items-center text-center my-auto px-2">
+          {/* 1-Line Bigger Heading with Small Side Margins */}
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.6rem] font-bold tracking-tight text-white leading-tight mb-3 text-center whitespace-nowrap max-w-full drop-shadow-[0_4px_24px_rgba(0,0,0,0.9)]">
             A quieter way to wait for your psychiatrist.
           </h1>
 
-          <p className="text-sm sm:text-base text-zinc-400 max-w-lg leading-relaxed mb-8">
-            No 50-question clinical checklists. Chat naturally with Sophia, an empathetic waiting room peer, while your doctor prepares your care.
+          {/* Clean Subtext */}
+          <p className="text-xs sm:text-sm md:text-base text-zinc-400 max-w-2xl mx-auto leading-relaxed mb-7 font-normal">
+            No 50-question clinical checklists. Chat naturally with Sophia, an empathetic<br className="hidden sm:inline" /> waiting room peer, while your doctor prepares your care.
           </p>
 
-          {/* Floating Dark Glass Console Window (Matching Picture 1 with Aura Glow) */}
-          <div
-            className="w-full max-w-lg rounded-2xl border border-white/[0.12] p-6 sm:p-7 backdrop-blur-2xl transition-all duration-300 relative"
-            style={{
-              background: 'rgba(12, 13, 19, 0.82)',
-              boxShadow: '0 0 60px -10px rgba(99, 102, 241, 0.22), 0 0 60px -10px rgba(245, 158, 11, 0.20), 0 35px 90px -15px rgba(0, 0, 0, 0.98), inset 0 1px 0 0 rgba(255, 255, 255, 0.12)'
-            }}
-          >
-            {/* Top Window Control Dots */}
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-zinc-600/80" />
-                <span className="w-2 h-2 rounded-full bg-zinc-600/80" />
-                <span className="w-2 h-2 rounded-full bg-zinc-600/80" />
-              </div>
-              <div className="text-[11px] font-medium text-zinc-300 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399] animate-pulse" />
-                <span>Waiting Room Lounge • ~6 min wait</span>
-              </div>
-              <div className="w-8" />
-            </div>
+          {/* Floating Dark Glass Console Window (Card Exact Match to Picture) */}
+          <div className="relative w-full max-w-[680px]">
+            {/* Luminous Ethereal Auras Hugging Left & Right of Card */}
+            <div
+              className="absolute -left-36 top-1/2 -translate-y-1/2 w-[440px] h-[380px] rounded-full pointer-events-none -z-10"
+              style={{
+                background: 'radial-gradient(circle at 45% 50%, rgba(99, 102, 241, 0.65) 0%, rgba(139, 92, 246, 0.40) 35%, rgba(67, 56, 202, 0.15) 60%, transparent 80%)',
+                filter: 'blur(55px)'
+              }}
+            />
+            <div
+              className="absolute -right-36 top-1/2 -translate-y-1/2 w-[440px] h-[380px] rounded-full pointer-events-none -z-10"
+              style={{
+                background: 'radial-gradient(circle at 55% 50%, rgba(245, 158, 11, 0.58) 0%, rgba(234, 88, 12, 0.36) 35%, rgba(180, 83, 9, 0.14) 60%, transparent 80%)',
+                filter: 'blur(55px)'
+              }}
+            />
 
-            {/* Glowing Neon Calming Breathing Waveform (Sky Blue -> Violet -> Pink -> Amber) */}
-            <div className="py-5 flex items-center justify-center relative">
-              <svg viewBox="0 0 400 64" className="w-full h-16 overflow-visible animate-wave-breathe">
-                <defs>
-                  <linearGradient id="heroWaveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#38bdf8" />
-                    <stop offset="25%" stopColor="#818cf8" />
-                    <stop offset="50%" stopColor="#c084fc" />
-                    <stop offset="75%" stopColor="#f472b6" />
-                    <stop offset="90%" stopColor="#fbbf24" />
-                    <stop offset="100%" stopColor="#f59e0b" />
-                  </linearGradient>
-                </defs>
-                {/* Diffuse Ambient Glow Wave Stroke */}
-                <path
-                  d="M 10 32 C 70 32, 90 8, 140 18 C 180 26, 195 54, 230 40 C 265 26, 290 8, 330 24 C 360 36, 380 32, 390 32"
-                  fill="none"
-                  stroke="url(#heroWaveGrad)"
-                  strokeWidth="8"
-                  opacity="0.45"
-                  strokeLinecap="round"
-                  style={{ filter: 'blur(5px)' }}
-                />
-                {/* Sharp Glowing Wave Stroke */}
-                <path
-                  d="M 10 32 C 70 32, 90 8, 140 18 C 180 26, 195 54, 230 40 C 265 26, 290 8, 330 24 C 360 36, 380 32, 390 32"
-                  fill="none"
-                  stroke="url(#heroWaveGrad)"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  style={{
-                    filter: 'drop-shadow(0 0 10px rgba(192, 132, 252, 0.9)) drop-shadow(0 0 20px rgba(245, 158, 11, 0.6))'
-                  }}
-                />
-              </svg>
-            </div>
-
-            {/* Check-In Pill Input & White Glow Button */}
-            <form onSubmit={handleSubmit} className="w-full mt-2">
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full">
-                <input
-                  ref={inputRef}
-                  type="text"
-                  className="flex-1 min-w-0 bg-[#14151e]/90 border border-white/15 rounded-full px-5 py-3.5 text-white text-sm placeholder-zinc-500 outline-none focus:border-white/40 focus:ring-2 focus:ring-white/10 transition-all shadow-inner"
-                  placeholder="What can we call you?"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  disabled={loading}
-                  autoFocus
-                  maxLength={40}
-                />
-                <button
-                  type="submit"
-                  className="flex-shrink-0 inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-semibold text-sm whitespace-nowrap transition-all cursor-pointer bg-white text-black hover:bg-zinc-200 active:scale-[0.98] shadow-[0_0_26px_rgba(255,255,255,0.40)] hover:shadow-[0_0_36px_rgba(255,255,255,0.60)] disabled:opacity-50"
-                  disabled={loading}
-                >
-                  <span>{loading ? 'Entering...' : 'Enter Lounge'}</span>
-                  <ArrowRight size={15} />
-                </button>
-              </div>
-
-              {error && (
-                <div className="mt-3 flex items-center justify-center gap-1.5 text-xs text-rose-400">
-                  <AlertCircle size={13} />
-                  <span>{error}</span>
+            {/* The Console Card */}
+            <div
+              className="w-full rounded-2xl border border-white/[0.12] p-6 sm:p-7 backdrop-blur-2xl transition-all duration-300 relative text-left"
+              style={{
+                background: 'rgba(14, 15, 21, 0.92)',
+                boxShadow: '0 30px 90px -15px rgba(0, 0, 0, 0.98), inset 0 1px 0 0 rgba(255, 255, 255, 0.14)'
+              }}
+            >
+              {/* Top Window Bar: 3 Dots on Left, Centered Title */}
+              <div className="relative flex items-center justify-between pb-3 mb-2">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-zinc-600/70" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-zinc-600/70" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-zinc-600/70" />
                 </div>
-              )}
-            </form>
+                <div className="absolute left-1/2 -translate-x-1/2 text-xs sm:text-sm font-medium text-white tracking-normal flex items-center gap-2 whitespace-nowrap">
+                  <span className="text-white font-medium">Waiting Room Lounge</span>
+                  <span className="text-zinc-500">•</span>
+                  <span className="text-zinc-400 font-normal">~6 min wait</span>
+                </div>
+                <div className="w-8" />
+              </div>
+
+              {/* Glowing Waveform in Center (Exact Match to Picture) */}
+              <div className="py-6 flex items-center justify-center relative">
+                <svg viewBox="0 0 540 90" className="w-full h-18 overflow-visible animate-wave-breathe">
+                  <defs>
+                    <linearGradient id="heroWaveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#60a5fa" />
+                      <stop offset="25%" stopColor="#818cf8" />
+                      <stop offset="48%" stopColor="#c084fc" />
+                      <stop offset="68%" stopColor="#f472b6" />
+                      <stop offset="85%" stopColor="#fbbf24" />
+                      <stop offset="100%" stopColor="#f59e0b" />
+                    </linearGradient>
+                  </defs>
+                  {/* Soft Blurred Luminous Halo */}
+                  <path
+                    d="M 20 45 C 70 45, 95 35, 135 38 C 175 42, 190 62, 225 54 C 255 46, 265 14, 295 24 C 325 34, 340 60, 375 52 C 405 44, 425 36, 455 40 C 485 44, 505 45, 520 45"
+                    fill="none"
+                    stroke="url(#heroWaveGrad)"
+                    strokeWidth="8"
+                    opacity="0.45"
+                    strokeLinecap="round"
+                    style={{ filter: 'blur(5px)' }}
+                  />
+                  {/* Sharp Glowing Neon Wave */}
+                  <path
+                    d="M 20 45 C 70 45, 95 35, 135 38 C 175 42, 190 62, 225 54 C 255 46, 265 14, 295 24 C 325 34, 340 60, 375 52 C 405 44, 425 36, 455 40 C 485 44, 505 45, 520 45"
+                    fill="none"
+                    stroke="url(#heroWaveGrad)"
+                    strokeWidth="3.5"
+                    strokeLinecap="round"
+                    style={{
+                      filter: 'drop-shadow(0 0 12px rgba(192, 132, 252, 0.95)) drop-shadow(0 0 24px rgba(245, 158, 11, 0.70))'
+                    }}
+                  />
+                </svg>
+              </div>
+
+              {/* Bottom Input & Action Pill Button */}
+              <form onSubmit={handleSubmit} className="w-full mt-1">
+                <div className="flex items-center gap-3 w-full">
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    className="flex-1 bg-[#1a1b24]/90 border border-white/10 rounded-full px-5 py-3 text-white text-sm placeholder-zinc-500 outline-none focus:border-white/30 focus:ring-1 focus:ring-white/15 transition-all shadow-inner"
+                    placeholder="What can we call you?"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    disabled={loading}
+                    autoFocus
+                    maxLength={40}
+                  />
+                  <button
+                    type="submit"
+                    className="flex-shrink-0 inline-flex items-center justify-center gap-1.5 px-6 py-3 rounded-full font-semibold text-sm whitespace-nowrap transition-all cursor-pointer bg-white text-black hover:bg-zinc-200 active:scale-[0.98] shadow-[0_0_24px_rgba(255,255,255,0.35)] hover:shadow-[0_0_35px_rgba(255,255,255,0.55)] disabled:opacity-50"
+                    disabled={loading}
+                  >
+                    <span>{loading ? 'Entering...' : 'Enter Lounge'}</span>
+                    <span className="text-base font-bold">→</span>
+                  </button>
+                </div>
+
+                {error && (
+                  <div className="mt-3 flex items-center justify-center gap-1.5 text-xs text-rose-400">
+                    <AlertCircle size={13} />
+                    <span>{error}</span>
+                  </div>
+                )}
+              </form>
+            </div>
           </div>
         </div>
 
-        {/* Scroll Hint */}
-        <div className="relative z-10 flex flex-col items-center gap-1 text-[11px] text-zinc-500 pb-2">
-          <span>Explore Platform</span>
-          <ChevronDown size={14} className="animate-bounce" />
-        </div>
+        {/* Minimal Bottom Spacer */}
+        <div className="h-4" />
       </section>
 
 
@@ -206,26 +213,27 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
           ========================================================================= */}
       <section
         id="trajectory"
-        className="min-h-screen h-screen w-full relative flex flex-col justify-center items-center px-4 sm:px-8 py-8 border-t border-white/[0.05] overflow-hidden snap-start"
+        className="min-h-screen h-screen w-full relative flex flex-col justify-center items-center px-4 sm:px-6 py-6 border-t border-white/[0.05] overflow-hidden snap-start"
       >
         {/* Luminous Ethereal Auras */}
         <div
-          className="absolute top-1/2 -translate-y-1/2 left-[-10%] sm:left-[2%] w-[480px] sm:w-[680px] h-[480px] sm:h-[620px] rounded-full pointer-events-none z-0"
+          className="absolute top-1/2 -translate-y-1/2 left-[-6%] w-[520px] h-[520px] rounded-full pointer-events-none z-0"
           style={{
-            background: 'radial-gradient(circle at 45% 45%, rgba(99, 102, 241, 0.44) 0%, rgba(124, 58, 237, 0.24) 42%, rgba(67, 56, 202, 0.06) 72%, transparent 88%)',
-            filter: 'blur(75px)'
+            background: 'radial-gradient(circle at 45% 45%, rgba(99, 102, 241, 0.45) 0%, rgba(124, 58, 237, 0.25) 40%, transparent 80%)',
+            filter: 'blur(70px)'
           }}
         />
         <div
-          className="absolute top-1/2 -translate-y-1/2 right-[-10%] sm:right-[2%] w-[460px] sm:w-[650px] h-[460px] sm:h-[600px] rounded-full pointer-events-none z-0"
+          className="absolute top-1/2 -translate-y-1/2 right-[-6%] w-[500px] h-[500px] rounded-full pointer-events-none z-0"
           style={{
-            background: 'radial-gradient(circle at 55% 45%, rgba(245, 158, 11, 0.38) 0%, rgba(234, 88, 12, 0.20) 42%, rgba(180, 83, 9, 0.05) 72%, transparent 88%)',
-            filter: 'blur(75px)'
+            background: 'radial-gradient(circle at 55% 45%, rgba(245, 158, 11, 0.40) 0%, rgba(234, 88, 12, 0.22) 40%, transparent 80%)',
+            filter: 'blur(70px)'
           }}
         />
 
-        <div className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center text-center mb-6">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-white leading-[1.16] mb-2 drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
+        {/* 1-Line Big Heading */}
+        <div className="relative z-10 w-full flex flex-col items-center text-center mb-5">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-bold tracking-tight text-white leading-tight mb-2 text-center whitespace-nowrap drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
             Silent clinical intelligence. Zero interrogation.
           </h2>
           <p className="text-xs sm:text-sm text-zinc-400 max-w-xl leading-relaxed">
@@ -233,9 +241,9 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
           </p>
         </div>
 
-        {/* Main Dashboard Window (Matching Option A) */}
+        {/* Main Dashboard Window: Wider with small side margins (max-w-6xl) */}
         <div
-          className="relative z-10 w-full max-w-4xl rounded-2xl border border-white/[0.10] p-5 sm:p-7 backdrop-blur-2xl"
+          className="relative z-10 w-full max-w-6xl rounded-2xl border border-white/[0.10] p-5 sm:p-7 backdrop-blur-2xl"
           style={{
             background: 'rgba(12, 13, 19, 0.88)',
             boxShadow: '0 0 60px -10px rgba(99, 102, 241, 0.20), 0 0 60px -10px rgba(245, 158, 11, 0.16), 0 35px 90px -15px rgba(0, 0, 0, 0.98), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)'
@@ -262,7 +270,6 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mb-4">
             {/* Russell's Affective Circumplex (Col 8) */}
             <div className="md:col-span-8 rounded-xl border border-white/[0.08] bg-zinc-950/80 p-3.5 text-left relative overflow-hidden">
-              {/* Quadrant Ambient Glow Fills (Matching Option A) */}
               <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-emerald-500/[0.14] blur-2xl pointer-events-none rounded-tl-xl" />
               <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-amber-500/[0.15] blur-2xl pointer-events-none rounded-tr-xl" />
               <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-indigo-500/[0.12] blur-2xl pointer-events-none rounded-bl-xl" />
@@ -274,8 +281,8 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
               </div>
 
               {/* 2D Circumplex Plot SVG */}
-              <div className="relative w-full aspect-[2.2/1] flex items-center justify-center z-10">
-                <svg viewBox="0 0 460 200" className="w-full h-full overflow-visible">
+              <div className="relative w-full aspect-[2.4/1] flex items-center justify-center z-10">
+                <svg viewBox="0 0 460 190" className="w-full h-full overflow-visible">
                   <defs>
                     <linearGradient id="circGrad" x1="0%" y1="100%" x2="100%" y2="0%">
                       <stop offset="0%" stopColor="#818cf8" />
@@ -286,17 +293,17 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
                   </defs>
 
                   {/* Axes Crosshair */}
-                  <line x1="230" y1="10" x2="230" y2="190" stroke="rgba(255,255,255,0.12)" strokeDasharray="3 3" />
-                  <line x1="20" y1="100" x2="440" y2="100" stroke="rgba(255,255,255,0.12)" strokeDasharray="3 3" />
+                  <line x1="230" y1="10" x2="230" y2="180" stroke="rgba(255,255,255,0.12)" strokeDasharray="3 3" />
+                  <line x1="20" y1="95" x2="440" y2="95" stroke="rgba(255,255,255,0.12)" strokeDasharray="3 3" />
 
                   {/* Axis Text Labels */}
-                  <text x="30" y="104" fill="#a1a1aa" fontSize="10">Pleasant ←</text>
-                  <text x="430" y="104" textAnchor="end" fill="#a1a1aa" fontSize="10">→ Unpleasant</text>
-                  <text x="230" y="196" textAnchor="middle" fill="#a1a1aa" fontSize="10">Arousal</text>
+                  <text x="30" y="99" fill="#a1a1aa" fontSize="10">Pleasant ←</text>
+                  <text x="430" y="99" textAnchor="end" fill="#a1a1aa" fontSize="10">→ Unpleasant</text>
+                  <text x="230" y="186" textAnchor="middle" fill="#a1a1aa" fontSize="10">Arousal</text>
 
                   {/* Dynamic Trajectory Curve Diffuse Glow */}
                   <path
-                    d="M 110 155 Q 170 115 215 88 T 320 58"
+                    d="M 110 150 Q 170 110 215 84 T 320 54"
                     fill="none"
                     stroke="url(#circGrad)"
                     strokeWidth="7"
@@ -307,7 +314,7 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
 
                   {/* Dynamic Trajectory Curve Sharp Stroke */}
                   <path
-                    d="M 110 155 Q 170 115 215 88 T 320 58"
+                    d="M 110 150 Q 170 110 215 84 T 320 54"
                     fill="none"
                     stroke="url(#circGrad)"
                     strokeWidth="3"
@@ -318,23 +325,20 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
                   />
 
                   {/* Points along trajectory */}
-                  {/* T-10m */}
-                  <circle cx="110" cy="155" r="5" fill="#818cf8" stroke="#000" strokeWidth="1.5" style={{ filter: 'drop-shadow(0 0 8px #818cf8)' }} />
-                  <text x="110" y="174" textAnchor="middle" fill="#c7d2fe" fontSize="9" fontWeight="500">T-10 min</text>
+                  <circle cx="110" cy="150" r="5" fill="#818cf8" stroke="#000" strokeWidth="1.5" style={{ filter: 'drop-shadow(0 0 8px #818cf8)' }} />
+                  <text x="110" y="169" textAnchor="middle" fill="#c7d2fe" fontSize="9" fontWeight="500">T-10 min</text>
 
-                  {/* T-5m */}
-                  <circle cx="190" cy="98" r="5" fill="#34d399" stroke="#000" strokeWidth="1.5" style={{ filter: 'drop-shadow(0 0 8px #34d399)' }} />
-                  <text x="190" y="85" textAnchor="middle" fill="#a7f3d0" fontSize="9" fontWeight="500">T-5 min</text>
+                  <circle cx="190" cy="94" r="5" fill="#34d399" stroke="#000" strokeWidth="1.5" style={{ filter: 'drop-shadow(0 0 8px #34d399)' }} />
+                  <text x="190" y="81" textAnchor="middle" fill="#a7f3d0" fontSize="9" fontWeight="500">T-5 min</text>
 
-                  {/* T-2m */}
-                  <circle cx="260" cy="76" r="5" fill="#fbbf24" stroke="#000" strokeWidth="1.5" style={{ filter: 'drop-shadow(0 0 8px #fbbf24)' }} />
-                  <text x="260" y="94" textAnchor="middle" fill="#fde68a" fontSize="9" fontWeight="500">T-2 min</text>
+                  <circle cx="260" cy="72" r="5" fill="#fbbf24" stroke="#000" strokeWidth="1.5" style={{ filter: 'drop-shadow(0 0 8px #fbbf24)' }} />
+                  <text x="260" y="90" textAnchor="middle" fill="#fde68a" fontSize="9" fontWeight="500">T-2 min</text>
 
                   {/* Current point (glowing orange beacon) */}
-                  <circle cx="320" cy="58" r="12" fill="none" stroke="#f59e0b" strokeWidth="1.5" className="animate-ping opacity-60" />
-                  <circle cx="320" cy="58" r="6" fill="#f59e0b" stroke="#ffffff" strokeWidth="2" style={{ filter: 'drop-shadow(0 0 10px #f59e0b)' }} />
-                  <rect x="295" y="26" width="50" height="18" rx="4" fill="#18181b" stroke="#f59e0b" strokeWidth="1" style={{ filter: 'drop-shadow(0 0 6px rgba(245,158,11,0.6))' }} />
-                  <text x="320" y="38" textAnchor="middle" fill="#ffffff" fontSize="9" fontWeight="bold">Current</text>
+                  <circle cx="320" cy="54" r="12" fill="none" stroke="#f59e0b" strokeWidth="1.5" className="animate-ping opacity-60" />
+                  <circle cx="320" cy="54" r="6" fill="#f59e0b" stroke="#ffffff" strokeWidth="2" style={{ filter: 'drop-shadow(0 0 10px #f59e0b)' }} />
+                  <rect x="295" y="22" width="50" height="18" rx="4" fill="#18181b" stroke="#f59e0b" strokeWidth="1" style={{ filter: 'drop-shadow(0 0 6px rgba(245,158,11,0.6))' }} />
+                  <text x="320" y="34" textAnchor="middle" fill="#ffffff" fontSize="9" fontWeight="bold">Current</text>
                 </svg>
               </div>
             </div>
@@ -383,39 +387,34 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
             </div>
           </div>
 
-          {/* Bottom Half: Emotional Wave (Stream) Timeline Chart with Neon Glows & Area Fills */}
+          {/* Bottom Half: Emotional Wave (Stream) Timeline Chart */}
           <div className="rounded-xl border border-white/[0.08] bg-zinc-950/80 p-3.5 text-left relative overflow-hidden">
             <div className="flex items-center justify-between text-xs mb-2">
               <span className="font-semibold text-zinc-200">Emotional wave (stream)</span>
               <span className="text-[11px] text-zinc-400">Last 30 minutes</span>
             </div>
 
-            <div className="relative w-full aspect-[4.5/1] max-h-24">
+            <div className="relative w-full aspect-[5/1] max-h-24">
               <svg viewBox="0 0 500 80" className="w-full h-full overflow-visible">
                 <defs>
-                  {/* Amber area fill gradient */}
                   <linearGradient id="amberAreaGrad" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.28" />
                     <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.0" />
                   </linearGradient>
-                  {/* Green area fill gradient */}
                   <linearGradient id="greenAreaGrad" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor="#10b981" stopOpacity="0.30" />
                     <stop offset="100%" stopColor="#10b981" stopOpacity="0.0" />
                   </linearGradient>
                 </defs>
 
-                {/* Horizontal Gridlines */}
                 <line x1="20" y1="20" x2="480" y2="20" stroke="rgba(255,255,255,0.06)" />
                 <line x1="20" y1="45" x2="480" y2="45" stroke="rgba(255,255,255,0.08)" strokeDasharray="2 2" />
                 <line x1="20" y1="70" x2="480" y2="70" stroke="rgba(255,255,255,0.06)" />
 
-                {/* Stream 1 Area (Amber) */}
                 <path
                   d="M 20 22 C 100 20, 180 35, 260 55 C 340 70, 420 68, 480 66 L 480 75 L 20 75 Z"
                   fill="url(#amberAreaGrad)"
                 />
-                {/* Stream 1 Glowing Stroke: Agitation Dropping (Amber) */}
                 <path
                   d="M 20 22 C 100 20, 180 35, 260 55 C 340 70, 420 68, 480 66"
                   fill="none"
@@ -425,12 +424,10 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
                   style={{ filter: 'drop-shadow(0 0 6px rgba(245, 158, 11, 0.95))' }}
                 />
 
-                {/* Stream 2 Area (Green) */}
                 <path
                   d="M 20 68 C 100 66, 180 55, 260 30 C 340 18, 420 18, 480 20 L 480 75 L 20 75 Z"
                   fill="url(#greenAreaGrad)"
                 />
-                {/* Stream 2 Glowing Stroke: Valence Rising / Calming (Green) */}
                 <path
                   d="M 20 68 C 100 66, 180 55, 260 30 C 340 18, 420 18, 480 20"
                   fill="none"
@@ -440,7 +437,6 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
                   style={{ filter: 'drop-shadow(0 0 7px rgba(52, 211, 153, 0.95))' }}
                 />
 
-                {/* Time Markers */}
                 <text x="20" y="78" fill="#71717a" fontSize="8">0</text>
                 <text x="100" y="78" fill="#71717a" fontSize="8">5</text>
                 <text x="180" y="78" fill="#71717a" fontSize="8">10</text>
@@ -460,26 +456,27 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
           ========================================================================= */}
       <section
         id="why"
-        className="min-h-screen h-screen w-full relative flex flex-col justify-center items-center px-4 sm:px-8 py-8 border-t border-white/[0.05] overflow-hidden snap-start"
+        className="min-h-screen h-screen w-full relative flex flex-col justify-center items-center px-4 sm:px-6 py-6 border-t border-white/[0.05] overflow-hidden snap-start"
       >
         {/* Luminous Ethereal Auras */}
         <div
-          className="absolute top-1/2 -translate-y-1/2 left-[-10%] sm:left-[2%] w-[480px] sm:w-[680px] h-[480px] sm:h-[620px] rounded-full pointer-events-none z-0"
+          className="absolute top-1/2 -translate-y-1/2 left-[-6%] w-[520px] h-[520px] rounded-full pointer-events-none z-0"
           style={{
-            background: 'radial-gradient(circle at 45% 45%, rgba(99, 102, 241, 0.46) 0%, rgba(124, 58, 237, 0.25) 42%, rgba(67, 56, 202, 0.08) 72%, transparent 88%)',
-            filter: 'blur(75px)'
+            background: 'radial-gradient(circle at 45% 45%, rgba(99, 102, 241, 0.45) 0%, rgba(124, 58, 237, 0.25) 40%, transparent 80%)',
+            filter: 'blur(70px)'
           }}
         />
         <div
-          className="absolute top-1/2 -translate-y-1/2 right-[-10%] sm:right-[2%] w-[460px] sm:w-[650px] h-[460px] sm:h-[600px] rounded-full pointer-events-none z-0"
+          className="absolute top-1/2 -translate-y-1/2 right-[-6%] w-[500px] h-[500px] rounded-full pointer-events-none z-0"
           style={{
-            background: 'radial-gradient(circle at 55% 45%, rgba(245, 158, 11, 0.40) 0%, rgba(234, 88, 12, 0.22) 42%, rgba(180, 83, 9, 0.06) 72%, transparent 88%)',
-            filter: 'blur(75px)'
+            background: 'radial-gradient(circle at 55% 45%, rgba(245, 158, 11, 0.40) 0%, rgba(234, 88, 12, 0.22) 40%, transparent 80%)',
+            filter: 'blur(70px)'
           }}
         />
 
-        <div className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center text-center mb-10">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-white leading-[1.16] mb-3 drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
+        {/* 1-Line Big Heading */}
+        <div className="relative z-10 w-full flex flex-col items-center text-center mb-8">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-bold tracking-tight text-white leading-tight mb-2 text-center whitespace-nowrap drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
             A waiting room designed for human dignity.
           </h2>
           <p className="text-xs sm:text-sm text-zinc-400 max-w-xl leading-relaxed">
@@ -487,13 +484,13 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
           </p>
         </div>
 
-        {/* 3 Obsidian Glass Cards (Matching 3B with Specular Glows) */}
-        <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl">
+        {/* 3 Obsidian Glass Cards: Wider layout with small side margins (max-w-6xl) */}
+        <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl">
           {/* Card 1: De-escalate Anxiety */}
           <div
             className="rounded-2xl border border-white/[0.12] p-8 flex flex-col items-center text-center backdrop-blur-2xl transition-all duration-300 hover:border-cyan-500/50 hover:shadow-[0_0_35px_rgba(56,189,248,0.20)]"
             style={{
-              background: 'rgba(13, 14, 20, 0.82)',
+              background: 'rgba(13, 14, 20, 0.85)',
               boxShadow: '0 24px 60px -12px rgba(0, 0, 0, 0.95), inset 0 1px 0 0 rgba(255, 255, 255, 0.12)'
             }}
           >
@@ -503,7 +500,7 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
 
             {/* Glowing Calm Wave Ribbon Graphic */}
             <div className="w-full h-24 flex items-center justify-center my-auto">
-              <svg viewBox="0 0 160 50" className="w-40 h-16 overflow-visible">
+              <svg viewBox="0 0 160 50" className="w-44 h-16 overflow-visible">
                 <defs>
                   <linearGradient id="cardWaveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stopColor="#38bdf8" />
@@ -511,7 +508,6 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
                     <stop offset="100%" stopColor="#c084fc" />
                   </linearGradient>
                 </defs>
-                {/* Secondary soft diffuse ribbon */}
                 <path
                   d="M 10 25 C 40 25, 55 5, 80 25 C 105 45, 120 25, 150 25"
                   fill="none"
@@ -521,7 +517,6 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
                   strokeLinecap="round"
                   style={{ filter: 'blur(4px)' }}
                 />
-                {/* Crisp luminous wave */}
                 <path
                   d="M 10 25 C 40 25, 55 5, 80 25 C 105 45, 120 25, 150 25"
                   fill="none"
@@ -542,7 +537,7 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
           <div
             className="rounded-2xl border border-white/[0.12] p-8 flex flex-col items-center text-center backdrop-blur-2xl transition-all duration-300 hover:border-purple-500/50 hover:shadow-[0_0_35px_rgba(168,85,247,0.20)]"
             style={{
-              background: 'rgba(13, 14, 20, 0.82)',
+              background: 'rgba(13, 14, 20, 0.85)',
               boxShadow: '0 24px 60px -12px rgba(0, 0, 0, 0.95), inset 0 1px 0 0 rgba(255, 255, 255, 0.12)'
             }}
           >
@@ -574,7 +569,7 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
           <div
             className="rounded-2xl border border-white/[0.12] p-8 flex flex-col items-center text-center backdrop-blur-2xl transition-all duration-300 hover:border-amber-500/50 hover:shadow-[0_0_35px_rgba(245,158,11,0.20)]"
             style={{
-              background: 'rgba(13, 14, 20, 0.82)',
+              background: 'rgba(13, 14, 20, 0.85)',
               boxShadow: '0 24px 60px -12px rgba(0, 0, 0, 0.95), inset 0 1px 0 0 rgba(255, 255, 255, 0.12)'
             }}
           >
@@ -608,26 +603,27 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
           ========================================================================= */}
       <section
         id="about"
-        className="min-h-screen h-screen w-full relative flex flex-col justify-between items-center px-4 sm:px-8 py-8 border-t border-white/[0.05] overflow-hidden snap-start"
+        className="min-h-screen h-screen w-full relative flex flex-col justify-between items-center px-4 sm:px-6 py-6 border-t border-white/[0.05] overflow-hidden snap-start"
       >
         {/* Luminous Ethereal Auras */}
         <div
-          className="absolute top-1/2 -translate-y-1/2 left-[-10%] sm:left-[2%] w-[480px] sm:w-[680px] h-[480px] sm:h-[620px] rounded-full pointer-events-none z-0"
+          className="absolute top-1/2 -translate-y-1/2 left-[-6%] w-[520px] h-[520px] rounded-full pointer-events-none z-0"
           style={{
-            background: 'radial-gradient(circle at 45% 45%, rgba(99, 102, 241, 0.44) 0%, rgba(124, 58, 237, 0.24) 42%, rgba(67, 56, 202, 0.08) 72%, transparent 88%)',
-            filter: 'blur(75px)'
+            background: 'radial-gradient(circle at 45% 45%, rgba(99, 102, 241, 0.45) 0%, rgba(124, 58, 237, 0.25) 40%, transparent 80%)',
+            filter: 'blur(70px)'
           }}
         />
         <div
-          className="absolute top-1/2 -translate-y-1/2 right-[-10%] sm:right-[2%] w-[460px] sm:w-[650px] h-[460px] sm:h-[600px] rounded-full pointer-events-none z-0"
+          className="absolute top-1/2 -translate-y-1/2 right-[-6%] w-[500px] h-[500px] rounded-full pointer-events-none z-0"
           style={{
-            background: 'radial-gradient(circle at 55% 45%, rgba(245, 158, 11, 0.42) 0%, rgba(234, 88, 12, 0.25) 42%, rgba(180, 83, 9, 0.06) 72%, transparent 88%)',
-            filter: 'blur(75px)'
+            background: 'radial-gradient(circle at 55% 45%, rgba(245, 158, 11, 0.42) 0%, rgba(234, 88, 12, 0.25) 40%, transparent 80%)',
+            filter: 'blur(70px)'
           }}
         />
 
-        <div className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center text-center mt-2 mb-6">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-white leading-[1.16] mb-2 drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
+        {/* 1-Line Big Heading */}
+        <div className="relative z-10 w-full flex flex-col items-center text-center mt-2 mb-5">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-bold tracking-tight text-white leading-tight mb-2 text-center whitespace-nowrap drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
             A gentler start to therapy.
           </h2>
           <p className="text-xs sm:text-sm text-zinc-400 max-w-xl leading-relaxed">
@@ -635,9 +631,9 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
           </p>
         </div>
 
-        {/* Centerpiece Console Window (Matching Picture 4) */}
+        {/* Centerpiece Console Window: Wider layout with small side margins (max-w-6xl) */}
         <div
-          className="relative z-10 w-full max-w-4xl rounded-2xl border border-white/[0.10] p-7 sm:p-9 backdrop-blur-2xl my-auto"
+          className="relative z-10 w-full max-w-6xl rounded-2xl border border-white/[0.10] p-7 sm:p-9 backdrop-blur-2xl my-auto"
           style={{
             background: 'rgba(12, 13, 19, 0.88)',
             boxShadow: '0 0 60px -10px rgba(99, 102, 241, 0.20), 0 0 60px -10px rgba(245, 158, 11, 0.18), 0 35px 90px -15px rgba(0, 0, 0, 0.98), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)'
@@ -745,7 +741,7 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
         </div>
 
         {/* Minimal Footer */}
-        <footer className="relative z-10 w-full max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-500 pt-4 pb-2 border-t border-white/[0.04]">
+        <footer className="relative z-10 w-full max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-500 pt-3 pb-2 border-t border-white/[0.04]">
           <div className="flex items-center gap-2">
             <span className="text-zinc-400 font-medium">Horizon Health</span>
             <span>•</span>
