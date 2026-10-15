@@ -220,8 +220,9 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
       </section>
 
 
+
       {/* =========================================================================
-          SCREEN 2: CLINICAL TRAJECTORY DASHBOARD (100vh, 100% Vector Icons)
+          SCREEN 2: CLINICAL TRAJECTORY DASHBOARD (100vh, Option A Exact Proportion)
           ========================================================================= */}
       <section
         id="trajectory"
@@ -229,23 +230,23 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
       >
         {/* Luminous Ethereal Auras */}
         <div
-          className="absolute top-1/2 -translate-y-1/2 left-[-6%] w-[520px] h-[520px] rounded-full pointer-events-none z-0"
+          className="absolute top-1/2 -translate-y-1/2 left-[-4%] w-[480px] h-[480px] rounded-full pointer-events-none z-0"
           style={{
-            background: 'radial-gradient(circle at 45% 45%, rgba(99, 102, 241, 0.45) 0%, rgba(124, 58, 237, 0.25) 40%, transparent 80%)',
-            filter: 'blur(70px)'
+            background: 'radial-gradient(circle at 45% 45%, rgba(99, 102, 241, 0.45) 0%, rgba(124, 58, 237, 0.22) 40%, transparent 80%)',
+            filter: 'blur(75px)'
           }}
         />
         <div
-          className="absolute top-1/2 -translate-y-1/2 right-[-6%] w-[500px] h-[500px] rounded-full pointer-events-none z-0"
+          className="absolute top-1/2 -translate-y-1/2 right-[-4%] w-[480px] h-[480px] rounded-full pointer-events-none z-0"
           style={{
-            background: 'radial-gradient(circle at 55% 45%, rgba(245, 158, 11, 0.40) 0%, rgba(234, 88, 12, 0.22) 40%, transparent 80%)',
-            filter: 'blur(70px)'
+            background: 'radial-gradient(circle at 55% 45%, rgba(245, 158, 11, 0.38) 0%, rgba(234, 88, 12, 0.20) 40%, transparent 80%)',
+            filter: 'blur(75px)'
           }}
         />
 
         {/* 1-Line Big Heading */}
-        <div className="relative z-10 w-full flex flex-col items-center text-center mb-4">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-bold tracking-tight text-white leading-tight mb-2 text-center whitespace-nowrap drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
+        <div className="relative z-10 w-full flex flex-col items-center text-center mb-3">
+          <h2 className="text-2xl sm:text-3xl md:text-[2.35rem] font-bold tracking-tight text-white leading-tight mb-2 text-center whitespace-nowrap drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
             Silent clinical intelligence. Zero interrogation.
           </h2>
           <p className="text-xs sm:text-sm text-zinc-400 max-w-xl leading-relaxed">
@@ -253,16 +254,16 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
           </p>
         </div>
 
-        {/* Main Dashboard Window: ZERO Emojis, 100% High-Class Vector Icons */}
+        {/* Main Dashboard Window: Option A Ratio (~56% Screen Width) */}
         <div
-          className="relative z-10 w-full max-w-6xl rounded-2xl border border-white/[0.10] p-5 sm:p-6 backdrop-blur-2xl"
+          className="relative z-10 w-full max-w-[840px] rounded-2xl border border-white/[0.10] p-4 sm:p-5 backdrop-blur-2xl"
           style={{
-            background: 'rgba(12, 13, 19, 0.88)',
+            background: 'rgba(12, 13, 19, 0.90)',
             boxShadow: '0 0 60px -10px rgba(99, 102, 241, 0.20), 0 0 60px -10px rgba(245, 158, 11, 0.16), 0 35px 90px -15px rgba(0, 0, 0, 0.98), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)'
           }}
         >
           {/* Dashboard Header Bar */}
-          <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/[0.08]">
+          <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-white/[0.08]">
             <div className="flex items-center gap-2.5">
               <div className="w-6 h-6 rounded-md bg-gradient-to-tr from-indigo-500/40 via-purple-500/40 to-amber-500/50 border border-white/20 flex items-center justify-center text-white shadow-[0_0_12px_rgba(245,158,11,0.3)]">
                 <Activity size={12} className="text-white" />
@@ -271,13 +272,13 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
             </div>
 
             {/* Centered Search Pill */}
-            <div className="flex items-center gap-2 px-3.5 py-1 rounded-full bg-zinc-900/90 border border-white/15 text-xs text-zinc-300 shadow-inner">
+            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900/90 border border-white/15 text-xs text-zinc-300 shadow-inner">
               <Search size={11} className="text-zinc-400" />
               <span className="font-medium text-[11px] text-zinc-300">Dashboard</span>
             </div>
 
             {/* Right Action Icons with High-Class Lucide SVGs */}
-            <div className="flex items-center gap-3 text-zinc-400">
+            <div className="flex items-center gap-2.5 text-zinc-400">
               <button type="button" className="p-1 hover:text-white transition-colors cursor-pointer" title="Settings">
                 <SlidersHorizontal size={13} />
               </button>
@@ -292,36 +293,36 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
           </div>
 
           {/* Main Body with Option A Micro Sidebar Dock + Circumplex & Badges */}
-          <div className="flex gap-3.5 mb-3">
+          <div className="flex gap-3 mb-2.5">
             {/* Option A Micro Sidebar Dock */}
-            <div className="hidden sm:flex flex-col items-center gap-3 py-2 px-1.5 rounded-xl bg-zinc-950/70 border border-white/[0.06] flex-shrink-0">
-              <div className="w-7 h-7 rounded-lg bg-white/[0.12] border border-white/20 flex items-center justify-center text-white shadow-sm" title="Overview">
-                <LayoutGrid size={13} />
+            <div className="hidden sm:flex flex-col items-center gap-2.5 py-2 px-1.5 rounded-xl bg-zinc-950/70 border border-white/[0.06] flex-shrink-0">
+              <div className="w-6 h-6 rounded-lg bg-white/[0.12] border border-white/20 flex items-center justify-center text-white shadow-sm" title="Overview">
+                <LayoutGrid size={12} />
               </div>
-              <div className="w-7 h-7 rounded-lg hover:bg-white/[0.06] flex items-center justify-center text-zinc-400 hover:text-white transition-colors cursor-pointer" title="Sessions">
-                <Users size={13} />
+              <div className="w-6 h-6 rounded-lg hover:bg-white/[0.06] flex items-center justify-center text-zinc-400 hover:text-white transition-colors cursor-pointer" title="Sessions">
+                <Users size={12} />
               </div>
-              <div className="w-7 h-7 rounded-lg hover:bg-white/[0.06] flex items-center justify-center text-zinc-400 hover:text-white transition-colors cursor-pointer" title="Timeline History">
-                <Clock size={13} />
+              <div className="w-6 h-6 rounded-lg hover:bg-white/[0.06] flex items-center justify-center text-zinc-400 hover:text-white transition-colors cursor-pointer" title="Timeline History">
+                <Clock size={12} />
               </div>
             </div>
 
             {/* Top Half: Circumplex on Left, Metric Badges on Right */}
-            <div className="flex-1 min-w-0 grid grid-cols-1 md:grid-cols-12 gap-3.5">
+            <div className="flex-1 min-w-0 grid grid-cols-1 md:grid-cols-12 gap-3">
               {/* Russell's Affective Circumplex (Col 8) */}
-              <div className="md:col-span-8 rounded-xl border border-white/[0.08] bg-zinc-950/80 p-3 text-left relative overflow-hidden">
+              <div className="md:col-span-8 rounded-xl border border-white/[0.08] bg-zinc-950/80 p-2.5 text-left relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-emerald-500/[0.14] blur-2xl pointer-events-none rounded-tl-xl" />
                 <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-amber-500/[0.15] blur-2xl pointer-events-none rounded-tr-xl" />
                 <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-indigo-500/[0.12] blur-2xl pointer-events-none rounded-bl-xl" />
 
-                <div className="flex items-center justify-between text-[11px] text-zinc-300 mb-1 relative z-10">
+                <div className="flex items-center justify-between text-[10px] text-zinc-300 mb-0.5 relative z-10">
                   <span className="font-semibold text-zinc-200">Valence</span>
                   <span className="font-semibold text-zinc-200">Arousal - High</span>
                   <span className="text-transparent">Placeholder</span>
                 </div>
 
-                {/* 2D Circumplex Plot SVG with Clean Vector Arrows */}
-                <div className="relative w-full aspect-[2.6/1] flex items-center justify-center z-10">
+                {/* 2D Circumplex Plot SVG */}
+                <div className="relative w-full aspect-[2.7/1] flex items-center justify-center z-10">
                   <svg viewBox="0 0 460 175" className="w-full h-full overflow-visible">
                     <defs>
                       <linearGradient id="circGrad" x1="0%" y1="100%" x2="100%" y2="0%">
@@ -330,9 +331,6 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
                         <stop offset="80%" stopColor="#fbbf24" />
                         <stop offset="100%" stopColor="#f59e0b" />
                       </linearGradient>
-                      <marker id="arrowHead" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-                        <path d="M0,0 L6,3 L0,6 Z" fill="#71717a" />
-                      </marker>
                     </defs>
 
                     {/* Dotted Grid Axes */}
@@ -385,50 +383,50 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
                 </div>
               </div>
 
-              {/* Metric Badges (Col 4) with High-Class Micro Vector Icons */}
+              {/* Metric Badges (Col 4) */}
               <div className="md:col-span-4 flex flex-col justify-between gap-2 text-left">
                 <div
-                  className="rounded-xl border border-emerald-500/80 p-2.5 relative overflow-hidden"
+                  className="rounded-xl border border-emerald-500/80 p-2 relative overflow-hidden"
                   style={{
                     background: 'rgba(6, 78, 59, 0.22)',
                     boxShadow: '0 0 25px rgba(16, 185, 129, 0.35), inset 0 0 15px rgba(16, 185, 129, 0.12)'
                   }}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] text-emerald-200 font-medium">Valence</span>
+                    <span className="text-[10px] text-emerald-200 font-medium">Valence</span>
                     <Sparkles size={11} className="text-emerald-400" />
                   </div>
-                  <div className="text-lg font-bold text-emerald-400 mt-0.5" style={{ textShadow: '0 0 12px rgba(52, 211, 153, 0.85)' }}>
+                  <div className="text-base font-bold text-emerald-400 mt-0.5" style={{ textShadow: '0 0 12px rgba(52, 211, 153, 0.85)' }}>
                     +0.42 (Calm)
                   </div>
                 </div>
 
                 <div
-                  className="rounded-xl border border-teal-500/30 p-2.5"
+                  className="rounded-xl border border-teal-500/30 p-2"
                   style={{
                     background: 'rgba(19, 78, 74, 0.18)'
                   }}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] text-teal-200 font-medium">Agitation</span>
+                    <span className="text-[10px] text-teal-200 font-medium">Agitation</span>
                     <Activity size={11} className="text-teal-400" />
                   </div>
-                  <div className="text-lg font-bold text-teal-300 mt-0.5" style={{ textShadow: '0 0 10px rgba(45, 212, 191, 0.7)' }}>
+                  <div className="text-base font-bold text-teal-300 mt-0.5" style={{ textShadow: '0 0 10px rgba(45, 212, 191, 0.7)' }}>
                     -38%
                   </div>
                 </div>
 
                 <div
-                  className="rounded-xl border border-amber-500/40 p-2.5"
+                  className="rounded-xl border border-amber-500/40 p-2"
                   style={{
                     background: 'rgba(120, 53, 15, 0.20)'
                   }}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] text-amber-200 font-medium">4Ps Anchors</span>
+                    <span className="text-[10px] text-amber-200 font-medium">4Ps Anchors</span>
                     <ShieldCheck size={11} className="text-amber-400" />
                   </div>
-                  <div className="text-lg font-bold text-amber-400 mt-0.5" style={{ textShadow: '0 0 10px rgba(251, 191, 36, 0.8)' }}>
+                  <div className="text-base font-bold text-amber-400 mt-0.5" style={{ textShadow: '0 0 10px rgba(251, 191, 36, 0.8)' }}>
                     Active
                   </div>
                 </div>
@@ -437,13 +435,13 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
           </div>
 
           {/* Bottom Half: Emotional Wave (Stream) Timeline Chart */}
-          <div className="rounded-xl border border-white/[0.08] bg-zinc-950/80 p-3 text-left relative overflow-hidden">
-            <div className="flex items-center justify-between text-xs mb-1.5">
+          <div className="rounded-xl border border-white/[0.08] bg-zinc-950/80 p-2.5 text-left relative overflow-hidden">
+            <div className="flex items-center justify-between text-[11px] mb-1">
               <span className="font-semibold text-zinc-200">Emotional wave (stream)</span>
-              <span className="text-[11px] text-zinc-400">Last 30 minutes</span>
+              <span className="text-[10px] text-zinc-400">Last 30 minutes</span>
             </div>
 
-            <div className="relative w-full aspect-[5.2/1] max-h-20">
+            <div className="relative w-full aspect-[5.2/1] max-h-16">
               <svg viewBox="0 0 500 75" className="w-full h-full overflow-visible">
                 <defs>
                   <linearGradient id="amberAreaGrad" x1="0%" y1="0%" x2="0%" y2="1">
@@ -501,7 +499,7 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
 
 
       {/* =========================================================================
-          SCREEN 3: WHY HORIZON (100vh, Master 3-Pillar Graphics)
+          SCREEN 3: WHY HORIZON (100vh, Master 3-Pillar Graphics ~68% Width)
           ========================================================================= */}
       <section
         id="why"
@@ -509,23 +507,23 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
       >
         {/* Luminous Ethereal Auras */}
         <div
-          className="absolute top-1/2 -translate-y-1/2 left-[-6%] w-[520px] h-[520px] rounded-full pointer-events-none z-0"
+          className="absolute top-1/2 -translate-y-1/2 left-[-4%] w-[480px] h-[480px] rounded-full pointer-events-none z-0"
           style={{
-            background: 'radial-gradient(circle at 45% 45%, rgba(99, 102, 241, 0.45) 0%, rgba(124, 58, 237, 0.25) 40%, transparent 80%)',
-            filter: 'blur(70px)'
+            background: 'radial-gradient(circle at 45% 45%, rgba(99, 102, 241, 0.45) 0%, rgba(124, 58, 237, 0.22) 40%, transparent 80%)',
+            filter: 'blur(75px)'
           }}
         />
         <div
-          className="absolute top-1/2 -translate-y-1/2 right-[-6%] w-[500px] h-[500px] rounded-full pointer-events-none z-0"
+          className="absolute top-1/2 -translate-y-1/2 right-[-4%] w-[480px] h-[480px] rounded-full pointer-events-none z-0"
           style={{
-            background: 'radial-gradient(circle at 55% 45%, rgba(245, 158, 11, 0.40) 0%, rgba(234, 88, 12, 0.22) 40%, transparent 80%)',
-            filter: 'blur(70px)'
+            background: 'radial-gradient(circle at 55% 45%, rgba(245, 158, 11, 0.38) 0%, rgba(234, 88, 12, 0.20) 40%, transparent 80%)',
+            filter: 'blur(75px)'
           }}
         />
 
         {/* 1-Line Big Heading */}
-        <div className="relative z-10 w-full flex flex-col items-center text-center mb-6">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-bold tracking-tight text-white leading-tight mb-2 text-center whitespace-nowrap drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
+        <div className="relative z-10 w-full flex flex-col items-center text-center mb-5">
+          <h2 className="text-2xl sm:text-3xl md:text-[2.35rem] font-bold tracking-tight text-white leading-tight mb-2 text-center whitespace-nowrap drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
             A waiting room designed for human dignity.
           </h2>
           <p className="text-xs sm:text-sm text-zinc-400 max-w-xl leading-relaxed">
@@ -533,56 +531,56 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
           </p>
         </div>
 
-        {/* 3 Obsidian Glass Cards with High-Class Visuals */}
-        <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl">
+        {/* 3 Obsidian Glass Cards (~68% Screen Width) */}
+        <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-5 w-full max-w-[960px]">
           {/* Card 1: De-escalate Anxiety (3D Fluid Calm Wave) */}
           <div
-            className="rounded-2xl border border-white/[0.12] p-7 sm:p-8 flex flex-col items-center text-center backdrop-blur-2xl transition-all duration-300 hover:border-cyan-500/50 hover:shadow-[0_0_35px_rgba(56,189,248,0.20)]"
+            className="rounded-2xl border border-white/[0.12] p-6 sm:p-7 flex flex-col items-center text-center backdrop-blur-2xl transition-all duration-300 hover:border-cyan-500/50 hover:shadow-[0_0_35px_rgba(56,189,248,0.20)]"
             style={{
-              background: 'rgba(13, 14, 20, 0.85)',
+              background: 'rgba(13, 14, 20, 0.88)',
               boxShadow: '0 24px 60px -12px rgba(0, 0, 0, 0.95), inset 0 1px 0 0 rgba(255, 255, 255, 0.12)'
             }}
           >
-            <h3 className="text-lg font-semibold text-white mb-5">
+            <h3 className="text-base sm:text-lg font-semibold text-white mb-4">
               De-escalate Anxiety
             </h3>
 
-            <div className="w-full h-24 flex items-center justify-center my-auto">
+            <div className="w-full h-20 flex items-center justify-center my-auto">
               <img
                 src={pillarWave}
                 alt="De-escalate Anxiety Fluid Wave"
-                className="w-48 h-auto object-contain mx-auto mix-blend-lighten filter drop-shadow-[0_0_15px_rgba(255,255,255,0.25)] select-none pointer-events-none"
+                className="w-44 h-auto object-contain mx-auto mix-blend-lighten filter drop-shadow-[0_0_15px_rgba(255,255,255,0.25)] select-none pointer-events-none"
               />
             </div>
 
-            <p className="text-xs text-zinc-400 leading-relaxed mt-5">
+            <p className="text-xs text-zinc-400 leading-relaxed mt-4">
               Calm wave indicator: Soothing and fluid interaction designed to reduce nervous system stress while waiting.
             </p>
           </div>
 
           {/* Card 2: A Peer, Not An Interrogator (Razor-Sharp High-Class Sophia Glass Chat Bubble) */}
           <div
-            className="rounded-2xl border border-white/[0.12] p-7 sm:p-8 flex flex-col items-center text-center backdrop-blur-2xl transition-all duration-300 hover:border-purple-500/50 hover:shadow-[0_0_35px_rgba(168,85,247,0.20)]"
+            className="rounded-2xl border border-white/[0.12] p-6 sm:p-7 flex flex-col items-center text-center backdrop-blur-2xl transition-all duration-300 hover:border-purple-500/50 hover:shadow-[0_0_35px_rgba(168,85,247,0.20)]"
             style={{
-              background: 'rgba(13, 14, 20, 0.85)',
+              background: 'rgba(13, 14, 20, 0.88)',
               boxShadow: '0 24px 60px -12px rgba(0, 0, 0, 0.95), inset 0 1px 0 0 rgba(255, 255, 255, 0.12)'
             }}
           >
-            <h3 className="text-lg font-semibold text-white mb-5">
+            <h3 className="text-base sm:text-lg font-semibold text-white mb-4">
               A Peer, Not An Interrogator
             </h3>
 
-            <div className="w-full h-24 flex items-center justify-center my-auto">
+            <div className="w-full h-20 flex items-center justify-center my-auto">
               <div className="relative flex flex-col items-center select-none pointer-events-none">
                 {/* Sleek Frosted Glass Chat Bubble with Vector Icon */}
                 <div
-                  className="px-6 py-3 rounded-2xl flex items-center gap-2.5 border border-white/20 backdrop-blur-xl transition-all"
+                  className="px-5 py-2.5 rounded-2xl flex items-center gap-2 border border-white/20 backdrop-blur-xl transition-all"
                   style={{
                     background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.05) 100%)',
                     boxShadow: '0 12px 35px rgba(0, 0, 0, 0.45), inset 0 1px 0 0 rgba(255, 255, 255, 0.25)'
                   }}
                 >
-                  <MessageSquare size={16} className="text-white fill-white/80" />
+                  <MessageSquare size={15} className="text-white fill-white/80" />
                   <span className="text-sm font-semibold text-white tracking-wide">Sophia</span>
                 </div>
                 {/* Chat Bubble Tail */}
@@ -594,46 +592,46 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
               </div>
             </div>
 
-            <p className="text-xs text-zinc-400 leading-relaxed mt-5">
+            <p className="text-xs text-zinc-400 leading-relaxed mt-4">
               Peer support interaction: A friendly, grounded companion sitting with you. Zero unsolicited advice, zero clinical checklists.
             </p>
           </div>
 
           {/* Card 3: Doctor Walks In Aligned (Pristine Clinical Readiness Seal Medal) */}
           <div
-            className="rounded-2xl border border-white/[0.12] p-7 sm:p-8 flex flex-col items-center text-center backdrop-blur-2xl transition-all duration-300 hover:border-amber-500/50 hover:shadow-[0_0_35px_rgba(245,158,11,0.20)]"
+            className="rounded-2xl border border-white/[0.12] p-6 sm:p-7 flex flex-col items-center text-center backdrop-blur-2xl transition-all duration-300 hover:border-amber-500/50 hover:shadow-[0_0_35px_rgba(245,158,11,0.20)]"
             style={{
-              background: 'rgba(13, 14, 20, 0.85)',
+              background: 'rgba(13, 14, 20, 0.88)',
               boxShadow: '0 24px 60px -12px rgba(0, 0, 0, 0.95), inset 0 1px 0 0 rgba(255, 255, 255, 0.12)'
             }}
           >
-            <h3 className="text-lg font-semibold text-white mb-5">
+            <h3 className="text-base sm:text-lg font-semibold text-white mb-4">
               Doctor Walks In Aligned
             </h3>
 
-            <div className="w-full h-24 flex items-center justify-center my-auto">
+            <div className="w-full h-20 flex items-center justify-center my-auto">
               <div className="relative flex flex-col items-center select-none pointer-events-none">
                 {/* Platinum/Silver Circular Rosette Seal */}
                 <div
-                  className="w-16 h-16 rounded-full flex items-center justify-center relative border border-white/25"
+                  className="w-14 h-14 rounded-full flex items-center justify-center relative border border-white/25"
                   style={{
                     background: 'linear-gradient(135deg, #e2e8f0 0%, #94a3b8 50%, #475569 100%)',
                     boxShadow: '0 0 25px rgba(255, 255, 255, 0.25), inset 0 2px 4px rgba(255, 255, 255, 0.8), inset 0 -2px 4px rgba(0, 0, 0, 0.4)'
                   }}
                 >
-                  <div className="w-11 h-11 rounded-full bg-slate-900/90 border border-white/20 flex items-center justify-center">
-                    <Check size={20} className="text-emerald-400 stroke-[2.5]" />
+                  <div className="w-9 h-9 rounded-full bg-slate-900/90 border border-white/20 flex items-center justify-center">
+                    <Check size={18} className="text-emerald-400 stroke-[2.5]" />
                   </div>
                   {/* Rosette Ribbon Tails */}
                   <div className="absolute -bottom-2 flex items-center gap-1">
-                    <span className="w-2.5 h-3.5 bg-gradient-to-b from-slate-400 to-slate-600 rotate-12 rounded-b-xs" />
-                    <span className="w-2.5 h-3.5 bg-gradient-to-b from-slate-400 to-slate-600 -rotate-12 rounded-b-xs" />
+                    <span className="w-2.5 h-3 bg-gradient-to-b from-slate-400 to-slate-600 rotate-12 rounded-b-xs" />
+                    <span className="w-2.5 h-3 bg-gradient-to-b from-slate-400 to-slate-600 -rotate-12 rounded-b-xs" />
                   </div>
                 </div>
               </div>
             </div>
 
-            <p className="text-xs text-zinc-400 leading-relaxed mt-5">
+            <p className="text-xs text-zinc-400 leading-relaxed mt-4">
               Clinical readiness badge: Your psychiatrist receives an instant 4Ps formulation, so your appointment begins with deep human connection.
             </p>
           </div>
@@ -642,31 +640,31 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
 
 
       {/* =========================================================================
-          SCREEN 4: ABOUT & 24/7 CRISIS SAFETY (100vh, High-Class Cards, ZERO Emojis)
+          SCREEN 4: ABOUT & 24/7 CRISIS SAFETY (Exact Picture 4 Ratio: 56.7% Width)
           ========================================================================= */}
       <section
         id="about"
-        className="h-screen min-h-screen max-h-screen w-full relative flex flex-col justify-between items-center px-4 sm:px-6 py-5 border-t border-white/[0.05] overflow-hidden snap-start snap-always"
+        className="h-screen min-h-screen max-h-screen w-full relative flex flex-col justify-center items-center px-4 sm:px-6 py-5 border-t border-white/[0.05] overflow-hidden snap-start snap-always"
       >
-        {/* Luminous Ethereal Auras */}
+        {/* Luminous Ethereal Auras Matching Mockup RGB Values */}
         <div
-          className="absolute top-1/2 -translate-y-1/2 left-[-6%] w-[520px] h-[520px] rounded-full pointer-events-none z-0"
+          className="absolute top-1/2 -translate-y-1/2 left-[-4%] w-[480px] h-[480px] rounded-full pointer-events-none z-0"
           style={{
-            background: 'radial-gradient(circle at 45% 45%, rgba(99, 102, 241, 0.45) 0%, rgba(124, 58, 237, 0.25) 40%, transparent 80%)',
-            filter: 'blur(70px)'
+            background: 'radial-gradient(circle at 45% 45%, rgba(99, 102, 241, 0.40) 0%, rgba(124, 58, 237, 0.20) 40%, transparent 80%)',
+            filter: 'blur(75px)'
           }}
         />
         <div
-          className="absolute top-1/2 -translate-y-1/2 right-[-6%] w-[500px] h-[500px] rounded-full pointer-events-none z-0"
+          className="absolute top-1/2 -translate-y-1/2 right-[-4%] w-[480px] h-[480px] rounded-full pointer-events-none z-0"
           style={{
-            background: 'radial-gradient(circle at 55% 45%, rgba(245, 158, 11, 0.42) 0%, rgba(234, 88, 12, 0.25) 40%, transparent 80%)',
-            filter: 'blur(70px)'
+            background: 'radial-gradient(circle at 55% 45%, rgba(245, 158, 11, 0.36) 0%, rgba(234, 88, 12, 0.18) 40%, transparent 80%)',
+            filter: 'blur(75px)'
           }}
         />
 
-        {/* 1-Line Big Heading */}
-        <div className="relative z-10 w-full flex flex-col items-center text-center mt-1 mb-4">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-bold tracking-tight text-white leading-tight mb-2 text-center whitespace-nowrap drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
+        {/* 1-Line Big Heading Matching Mockup Proportions */}
+        <div className="relative z-10 w-full flex flex-col items-center text-center mb-5">
+          <h2 className="text-2xl sm:text-3xl md:text-[2.35rem] font-bold tracking-tight text-white leading-tight mb-2 text-center whitespace-nowrap drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
             A gentler start to therapy.
           </h2>
           <p className="text-xs sm:text-sm text-zinc-400 max-w-xl leading-relaxed">
@@ -674,68 +672,63 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
           </p>
         </div>
 
-        {/* Centerpiece Console Window: Exact Match to Picture 4 */}
+        {/* Centerpiece Console Window: Exact Picture 4 Ratio (56.7% Screen Width, max-w-[820px]) */}
         <div
-          className="relative z-10 w-full max-w-6xl rounded-2xl border border-white/[0.10] p-6 sm:p-8 backdrop-blur-2xl my-auto"
+          className="relative z-10 w-full max-w-[820px] rounded-2xl border border-white/[0.10] p-6 sm:p-7 backdrop-blur-2xl"
           style={{
-            background: 'rgba(12, 13, 19, 0.88)',
-            boxShadow: '0 0 60px -10px rgba(99, 102, 241, 0.20), 0 0 60px -10px rgba(245, 158, 11, 0.18), 0 35px 90px -15px rgba(0, 0, 0, 0.98), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)'
+            background: 'rgba(12, 13, 19, 0.90)',
+            boxShadow: '0 0 60px -10px rgba(99, 102, 241, 0.20), 0 0 60px -10px rgba(245, 158, 11, 0.16), 0 35px 90px -15px rgba(0, 0, 0, 0.98), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)'
           }}
         >
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
             {/* Left Column: Our Clinical Philosophy (with right subtle divider) */}
-            <div className="md:col-span-7 text-left space-y-4 md:pr-6 md:border-r md:border-white/[0.08]">
+            <div className="md:col-span-7 text-left space-y-3.5 md:pr-6 md:border-r md:border-white/[0.08]">
               <div>
-                <h3 className="text-2xl font-bold text-white tracking-tight">
+                <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
                   Our Clinical Philosophy
                 </h3>
                 <div
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-indigo-400/30 text-[11px] text-indigo-200 font-medium mt-2"
+                  className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full border border-indigo-400/30 text-[11px] text-indigo-300 font-medium mt-1.5"
                   style={{
                     background: 'rgba(99, 102, 241, 0.12)',
-                    boxShadow: '0 0 15px rgba(99, 102, 241, 0.20)'
+                    boxShadow: '0 0 12px rgba(99, 102, 241, 0.18)'
                   }}
                 >
-                  <ShieldCheck size={13} className="text-indigo-400" />
+                  <ShieldCheck size={12} className="text-indigo-400" />
                   <span>Patient privacy badge</span>
                 </div>
               </div>
 
-              {/* Zero Advertising Access Tile */}
-              <div className="flex items-center gap-3.5 pt-2">
-                <div className="w-11 h-11 rounded-xl bg-white/[0.06] border border-white/15 flex items-center justify-center text-white shadow-sm flex-shrink-0">
-                  <EyeOff size={18} className="text-zinc-200" />
+              {/* Zero Advertising Access Tile: Clean, Bold, Exactly Matching Picture 4 */}
+              <div className="flex items-center gap-3.5 pt-1.5">
+                <div className="w-10 h-10 rounded-xl bg-white/[0.06] border border-white/15 flex items-center justify-center text-white shadow-sm flex-shrink-0">
+                  <EyeOff size={18} className="text-zinc-200" strokeWidth={1.75} />
                 </div>
-                <div>
-                  <span className="text-base sm:text-lg font-semibold text-white tracking-tight">
-                    Zero Advertising Access
-                  </span>
-                  <p className="text-xs text-zinc-400 mt-0.5">
-                    No marketing trackers, third-party data broker access, or commercial profiling.
-                  </p>
-                </div>
+                <span className="text-base sm:text-lg font-semibold text-white tracking-tight">
+                  Zero Advertising Access
+                </span>
               </div>
 
               {/* Empathetic intake values list with fine dividers */}
-              <div className="pt-2">
-                <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider block mb-2.5">
+              <div className="pt-1.5">
+                <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider block mb-2">
                   Empathetic intake values
                 </span>
                 
-                <div className="space-y-0">
-                  <div className="flex items-center gap-3 py-2.5 border-b border-white/[0.08]">
-                    <Heart size={15} className="text-zinc-400 stroke-[1.75]" />
-                    <span className="text-sm font-medium text-zinc-200">Compassionate Onboarding</span>
+                <div className="space-y-0 text-zinc-200 text-xs sm:text-sm">
+                  <div className="flex items-center gap-2.5 py-2 border-b border-white/[0.07]">
+                    <Heart size={14} className="text-zinc-400 stroke-[1.75]" />
+                    <span>Compassionate Onboarding</span>
                   </div>
 
-                  <div className="flex items-center gap-3 py-2.5 border-b border-white/[0.08]">
-                    <Heart size={15} className="text-zinc-400 stroke-[1.75]" />
-                    <span className="text-sm font-medium text-zinc-200">Patient-Centric Approach</span>
+                  <div className="flex items-center gap-2.5 py-2 border-b border-white/[0.07]">
+                    <Heart size={14} className="text-zinc-400 stroke-[1.75]" />
+                    <span>Patient-Centric Approach</span>
                   </div>
 
-                  <div className="flex items-center gap-3 py-2.5">
-                    <Lock size={15} className="text-zinc-400 stroke-[1.75]" />
-                    <span className="text-sm font-medium text-zinc-200">Confidential Care Path</span>
+                  <div className="flex items-center gap-2.5 py-2">
+                    <Lock size={14} className="text-zinc-400 stroke-[1.75]" />
+                    <span>Confidential Care Path</span>
                   </div>
                 </div>
               </div>
@@ -744,58 +737,58 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
             {/* Right Column: 24/7 Immediate Crisis Support (Glowing Amber Card) */}
             <div className="md:col-span-5 flex justify-center pl-0 md:pl-2">
               <div
-                className="w-full max-w-sm rounded-2xl p-6 flex flex-col items-center text-center relative overflow-hidden animate-pulse-glow-amber"
+                className="w-full max-w-[260px] rounded-2xl p-5 flex flex-col items-center text-center relative overflow-hidden animate-pulse-glow-amber"
                 style={{
                   border: '1.5px solid rgba(245, 158, 11, 0.75)',
-                  background: 'linear-gradient(135deg, rgba(234, 88, 12, 0.16) 0%, rgba(245, 158, 11, 0.08) 50%, rgba(15, 15, 20, 0.92) 100%)',
-                  boxShadow: '0 0 45px rgba(245, 158, 11, 0.40), 0 0 90px rgba(234, 88, 12, 0.25), inset 0 0 25px rgba(245, 158, 11, 0.15)'
+                  background: 'linear-gradient(135deg, rgba(234, 88, 12, 0.16) 0%, rgba(245, 158, 11, 0.08) 50%, rgba(15, 15, 20, 0.94) 100%)',
+                  boxShadow: '0 0 45px rgba(245, 158, 11, 0.40), 0 0 90px rgba(234, 88, 12, 0.25), inset 0 0 20px rgba(245, 158, 11, 0.12)'
                 }}
               >
                 {/* Luminous Top Badge */}
                 <span
-                  className="px-3.5 py-1.5 rounded-full text-[11px] font-bold text-zinc-950 mb-3 tracking-wide"
+                  className="px-3.5 py-1 rounded-full text-[10px] font-bold text-zinc-950 mb-2.5 tracking-wide"
                   style={{
                     background: 'linear-gradient(90deg, #ea580c 0%, #f59e0b 100%)',
-                    boxShadow: '0 0 20px rgba(245, 158, 11, 0.65)'
+                    boxShadow: '0 0 16px rgba(245, 158, 11, 0.65)'
                   }}
                 >
                   24/7 Immediate Crisis Support
                 </span>
 
                 <div
-                  className="text-5xl sm:text-6xl font-extrabold tracking-tight text-white my-1"
+                  className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white my-1"
                   style={{
                     textShadow: '0 0 24px rgba(255, 255, 255, 0.6), 0 0 45px rgba(245, 158, 11, 0.45)'
                   }}
                 >
                   988
                 </div>
-                <p className="text-xs font-medium text-amber-200/90 mb-5">
+                <p className="text-[11px] font-medium text-amber-200/90 mb-4">
                   Suicide & Crisis Lifeline
                 </p>
 
                 {/* 3 Action Buttons matching Picture 4 */}
-                <div className="flex items-center gap-2.5 w-full">
+                <div className="flex items-center gap-2 w-full">
                   <a
                     href="tel:988"
-                    className="flex-1 py-2 px-3 rounded-full border border-amber-500/50 hover:border-amber-400 bg-white/10 hover:bg-white/20 text-xs font-semibold text-white flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-[0_0_15px_rgba(245,158,11,0.22)] active:scale-95"
+                    className="flex-1 py-1.5 px-2.5 rounded-full border border-amber-500/40 hover:border-amber-400 bg-[#16120e] hover:bg-white/10 text-xs font-semibold text-white flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-[0_0_10px_rgba(245,158,11,0.2)] active:scale-95"
                   >
-                    <Phone size={13} className="text-amber-300" />
+                    <Phone size={11} className="text-amber-300" />
                     <span>Call</span>
                   </a>
                   <a
                     href="sms:988"
-                    className="flex-1 py-2 px-3 rounded-full border border-amber-500/50 hover:border-amber-400 bg-white/10 hover:bg-white/20 text-xs font-semibold text-white flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-[0_0_15px_rgba(245,158,11,0.22)] active:scale-95"
+                    className="flex-1 py-1.5 px-2.5 rounded-full border border-amber-500/40 hover:border-amber-400 bg-[#16120e] hover:bg-white/10 text-xs font-semibold text-white flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-[0_0_10px_rgba(245,158,11,0.2)] active:scale-95"
                   >
-                    <MessageSquare size={13} className="text-amber-300" />
+                    <MessageSquare size={11} className="text-amber-300" />
                     <span>Text</span>
                   </a>
                   <a
                     href="tel:988"
-                    className="w-8 h-8 rounded-full border border-amber-500/50 hover:border-amber-400 bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all cursor-pointer shadow-[0_0_15px_rgba(245,158,11,0.22)] active:scale-95 flex-shrink-0"
+                    className="w-7 h-7 rounded-full border border-amber-500/40 hover:border-amber-400 bg-[#16120e] hover:bg-white/10 flex items-center justify-center transition-all cursor-pointer shadow-[0_0_10px_rgba(245,158,11,0.2)] active:scale-95 flex-shrink-0"
                     title="Direct Dial 988"
                   >
-                    <Phone size={13} className="text-amber-300" />
+                    <Phone size={11} className="text-amber-300" />
                   </a>
                 </div>
               </div>
@@ -804,7 +797,7 @@ export default function LandingHomePage({ onCheckIn, loading, error }) {
         </div>
 
         {/* Minimal Footer */}
-        <footer className="relative z-10 w-full max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-zinc-500 pt-2 pb-1 border-t border-white/[0.04]">
+        <footer className="relative z-10 w-full max-w-[820px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-zinc-500 pt-4 pb-1 border-t border-white/[0.04]">
           <div className="flex items-center gap-1.5">
             <span className="text-zinc-400 font-medium">Horizon Health</span>
             <span className="w-1 h-1 rounded-full bg-zinc-600 inline-block mx-1.5" />
